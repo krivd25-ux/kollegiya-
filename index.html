@@ -1,0 +1,2962 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Коллегия">
+  <title>Тренерская коллегия</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22112%22%20fill%3D%22%232f5bea%22%2F%3E%3Cpath%20d%3D%22M176%20136v240M176%20262l128-126M214%20224l96%20152%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2244%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <style>
+/* ==========================================================================
+   Дизайн-система «Тренерская коллегия»
+   ========================================================================== */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --border: #e6e8ec;
+  --border-strong: #d3d7de;
+  --text: #15181e;
+  --text-2: #5b6372;
+  --text-3: #8b93a1;
+
+  --accent: #2f5bea;
+  --accent-hover: #2349c9;
+  --accent-soft: #edf2ff;
+
+  --green: #16a34a;   --green-soft: #e8f7ee;
+  --red: #dc2626;     --red-soft: #fdecec;
+  --amber: #d97706;   --amber-soft: #fdf4e3;
+  --blue: #2563eb;    --blue-soft: #e9f0fe;
+  --violet: #7c3aed;  --violet-soft: #f1ebfe;
+  --gray: #64748b;    --gray-soft: #eef1f5;
+
+  --radius-s: 8px;
+  --radius: 12px;
+  --radius-l: 16px;
+  --shadow-s: 0 1px 2px rgba(16, 24, 40, .05);
+  --shadow: 0 1px 3px rgba(16, 24, 40, .06), 0 4px 12px rgba(16, 24, 40, .05);
+  --shadow-l: 0 12px 40px rgba(16, 24, 40, .18);
+
+  --sidebar-w: 240px;
+  --tabbar-h: 64px;
+  --tap: 44px;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ease: cubic-bezier(.2, .7, .3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; font-family: var(--font); font-size: 15px; line-height: 1.45;
+  color: var(--text); background: var(--bg);
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+a { color: var(--accent); text-decoration: none; }
+h1, h2, h3 { margin: 0; letter-spacing: -.01em; }
+h2 { font-size: 17px; font-weight: 650; }
+h3 { font-size: 15px; font-weight: 600; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.muted { color: var(--text-2); }
+.faint { color: var(--text-3); }
+.small { font-size: 13px; }
+.nowrap { white-space: nowrap; }
+.num { font-variant-numeric: tabular-nums; }
+.hidden { display: none !important; }
+
+/* ---------- Загрузка ---------- */
+.boot { min-height: 100vh; display: grid; place-items: center; }
+.spinner {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 3px solid var(--border); border-top-color: var(--accent);
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading { display: grid; place-items: center; padding: 48px 0; }
+.skeleton { background: linear-gradient(90deg, #eef0f3 0%, #f6f7f9 50%, #eef0f3 100%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: var(--radius-s); }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ---------- Каркас ---------- */
+.app { min-height: 100vh; }
+.sidebar {
+  position: fixed; inset: 0 auto 0 0; width: var(--sidebar-w);
+  background: var(--surface); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; padding: 18px 12px; z-index: 20;
+}
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 20px; font-weight: 700; font-size: 16px; }
+.brand-mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 15px; }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav a {
+  display: flex; align-items: center; gap: 11px; padding: 9px 10px; border-radius: var(--radius-s);
+  color: var(--text-2); font-weight: 500; transition: background .15s, color .15s;
+}
+.nav a:hover { background: var(--surface-2); color: var(--text); }
+.nav a.active { background: var(--accent-soft); color: var(--accent); }
+.nav svg { width: 19px; height: 19px; flex: none; }
+.nav .badge { margin-left: auto; }
+.sidebar-foot { margin-top: auto; border-top: 1px solid var(--border); padding: 14px 10px 0; display: flex; align-items: center; gap: 10px; }
+.sidebar-foot .who { min-width: 0; flex: 1; color: var(--text); }
+.sidebar-foot .who b { display: block; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.main { margin-left: var(--sidebar-w); min-height: 100vh; }
+.topbar {
+  position: sticky; top: 0; z-index: 15; background: rgba(245, 246, 248, .88);
+  backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px);
+  display: flex; align-items: center; gap: 8px; padding: 14px 28px; min-height: 60px;
+}
+.topbar h1 { font-size: 22px; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.view { padding: 4px 28px 40px; max-width: 1180px; animation: fade-in .22s var(--ease); }
+@keyframes fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+.tabbar { display: none; }
+
+@media (max-width: 860px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); }
+  .topbar { padding: calc(10px + env(safe-area-inset-top)) 16px 10px; min-height: 56px; background: rgba(245, 246, 248, .92); }
+  .topbar h1 { font-size: 20px; }
+  .view { padding: 2px 14px 28px; }
+  .tabbar {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(255, 255, 255, .96); border-top: 1px solid var(--border);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  .tabbar a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--text-3); font-size: 11px; font-weight: 500; position: relative; }
+  .tabbar a.active { color: var(--accent); }
+  .tabbar svg { width: 23px; height: 23px; }
+  .tabbar .dot { position: absolute; top: 9px; left: calc(50% + 7px); width: 8px; height: 8px; border-radius: 50%; background: var(--red); border: 2px solid #fff; }
+}
+
+/* ---------- Кнопки ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 40px; padding: 0 15px; border-radius: 10px; border: 1px solid var(--border-strong);
+  background: var(--surface); color: var(--text); font-weight: 550; font-size: 14px; cursor: pointer;
+  transition: background .15s, border-color .15s, transform .08s, box-shadow .15s; white-space: nowrap; user-select: none;
+}
+.btn:hover { background: var(--surface-2); }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .55; pointer-events: none; }
+.btn svg { width: 17px; height: 17px; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 1px 2px rgba(47, 91, 234, .3); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-danger { color: var(--red); }
+.btn-danger:hover { background: var(--red-soft); border-color: #f5c2c2; }
+.btn-success { background: var(--green); border-color: var(--green); color: #fff; }
+.btn-ghost { border-color: transparent; background: transparent; }
+.btn-ghost:hover { background: rgba(0, 0, 0, .04); }
+.btn-lg { min-height: 50px; font-size: 16px; border-radius: 12px; padding: 0 20px; }
+.btn-block { width: 100%; }
+.btn-sm { min-height: 32px; padding: 0 10px; font-size: 13px; border-radius: 8px; }
+.icon-btn { width: var(--tap); height: var(--tap); padding: 0; border-radius: 12px; border: 0; background: transparent; display: inline-grid; place-items: center; cursor: pointer; color: var(--text-2); position: relative; }
+.icon-btn:hover { background: rgba(0, 0, 0, .05); }
+.icon-btn svg { width: 22px; height: 22px; }
+.icon-btn .dot { position: absolute; top: 9px; right: 9px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+.btn.is-busy { position: relative; color: transparent !important; }
+.btn.is-busy::after { content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); border-top-color: #fff; animation: spin .7s linear infinite; }
+.btn:not(.btn-primary):not(.btn-success).is-busy::after { border-color: var(--border); border-top-color: var(--accent); }
+
+/* ---------- Карточки и списки ---------- */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-l); box-shadow: var(--shadow-s); }
+.card-pad { padding: 18px; }
+.card-head { display: flex; align-items: center; gap: 10px; padding: 16px 18px 10px; }
+.card-head h2 { flex: 1; }
+.section { margin-top: 22px; }
+.section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.section-head h2 { flex: 1; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.row-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.grow { flex: 1; min-width: 0; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.list { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-l); overflow: hidden; box-shadow: var(--shadow-s); }
+.list-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 60px;
+  border-top: 1px solid var(--border); color: inherit; transition: background .12s;
+}
+.list-item:first-child { border-top: 0; }
+a.list-item:hover, button.list-item:hover { background: var(--surface-2); }
+button.list-item { width: 100%; border: 0; background: transparent; text-align: left; cursor: pointer; }
+.list-item .title, .session .title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list-item .sub, .session .sub { font-size: 13px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.session .grow { min-width: 0; }
+.chev { color: var(--text-3); flex: none; width: 18px; height: 18px; }
+
+.avatar { width: 38px; height: 38px; border-radius: 50%; flex: none; display: grid; place-items: center; font-weight: 650; font-size: 14px; color: #fff; }
+.avatar-lg { width: 64px; height: 64px; font-size: 22px; }
+
+.empty { text-align: center; padding: 36px 20px; color: var(--text-2); }
+.empty-icon { font-size: 30px; margin-bottom: 6px; }
+.error-box { background: var(--red-soft); color: #991b1b; border-radius: var(--radius); padding: 14px 16px; display: flex; gap: 12px; align-items: center; }
+.note { background: var(--accent-soft); color: #1e3a8a; border-radius: var(--radius); padding: 12px 14px; font-size: 14px; }
+.warn { background: var(--amber-soft); color: #92400e; border-radius: var(--radius); padding: 12px 14px; font-size: 14px; }
+
+/* ---------- Бейджи ---------- */
+.badge { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; background: var(--gray-soft); color: var(--gray); }
+.badge.green { background: var(--green-soft); color: var(--green); }
+.badge.red { background: var(--red-soft); color: var(--red); }
+.badge.amber { background: var(--amber-soft); color: var(--amber); }
+.badge.blue { background: var(--blue-soft); color: var(--blue); }
+.badge.violet { background: var(--violet-soft); color: var(--violet); }
+.badge.accent { background: var(--accent-soft); color: var(--accent); }
+.badge.count { background: var(--red); color: #fff; min-width: 20px; justify-content: center; padding: 0 6px; }
+
+/* ---------- Показатели ---------- */
+.kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+@media (max-width: 1100px) { .kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 520px) {
+  .kpis { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .kpi { padding: 10px 11px; border-radius: var(--radius); }
+  .kpi-label { font-size: 12px; line-height: 1.25; min-height: 30px; }
+  .kpi-value { font-size: 22px; }
+}
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-l); padding: 14px 16px; color: inherit; display: block; transition: border-color .15s, box-shadow .15s, transform .1s; box-shadow: var(--shadow-s); }
+a.kpi:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+a.kpi:active { transform: scale(.98); }
+.kpi-label { font-size: 13px; color: var(--text-2); }
+.kpi-value { font-size: 26px; font-weight: 700; margin-top: 2px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.kpi-value.green { color: var(--green); }
+.kpi-value.red { color: var(--red); }
+
+/* ---------- Тренировки ---------- */
+.session { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-top: 1px solid var(--border); color: inherit; min-height: 66px; }
+.session:first-child { border-top: 0; }
+.session:hover { background: var(--surface-2); }
+.session-time { width: 58px; flex: none; font-variant-numeric: tabular-nums; }
+.session-time b { display: block; font-size: 16px; }
+.session-time span { font-size: 12px; color: var(--text-3); }
+.session-bar { width: 4px; align-self: stretch; border-radius: 4px; background: var(--accent); flex: none; }
+.session.cancelled { opacity: .6; }
+.session.cancelled .session-bar { background: var(--text-3); }
+.session.cancelled .title { text-decoration: line-through; }
+.session.conflict .session-bar { background: var(--red); }
+
+/* ---------- Формы ---------- */
+.form { display: flex; flex-direction: column; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field > label, .label { font-size: 13px; font-weight: 600; color: var(--text-2); }
+.field .req { color: var(--red); }
+.input, .select, .textarea {
+  width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  font-size: 16px; outline: none; transition: border-color .15s, box-shadow .15s; -webkit-appearance: none; appearance: none;
+}
+.select { padding-right: 34px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238b93a1' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.textarea { min-height: 84px; resize: vertical; }
+.input:focus, .select:focus, .textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47, 91, 234, .15); }
+.field.invalid .input, .field.invalid .select, .field.invalid .textarea { border-color: var(--red); }
+.field-error { color: var(--red); font-size: 13px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .field-row.stack-sm { grid-template-columns: 1fr; } }
+.check { display: flex; align-items: center; gap: 10px; min-height: 40px; cursor: pointer; }
+.check input { width: 20px; height: 20px; accent-color: var(--accent); }
+.form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+.form-error { background: var(--red-soft); color: #991b1b; border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { min-height: 38px; min-width: 46px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--surface); font-weight: 600; cursor: pointer; }
+.chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ---------- Панель инструментов ---------- */
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+.toolbar .input, .toolbar .select { min-height: 40px; font-size: 15px; width: auto; }
+.toolbar .search { flex: 1 1 220px; }
+.search { position: relative; }
+.search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: var(--text-3); pointer-events: none; }
+.search .input { padding-left: 38px; width: 100%; }
+@media (max-width: 860px) {
+  .toolbar .select { flex: 1 1 40%; min-width: 0; }
+}
+
+.segmented { display: inline-flex; background: #eceef2; border-radius: 10px; padding: 3px; gap: 2px; }
+.segmented button { border: 0; background: transparent; min-height: 34px; padding: 0 14px; border-radius: 8px; font-weight: 600; font-size: 14px; color: var(--text-2); cursor: pointer; }
+.segmented svg { width: 16px; height: 16px; vertical-align: -3px; }
+.segmented button.on { background: var(--surface); color: var(--text); box-shadow: var(--shadow-s); }
+
+/* ---------- Журнал посещаемости ---------- */
+.att-summary {
+  position: sticky; top: 60px; z-index: 10; display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 8px; align-items: center;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-l); padding: 10px 12px; margin-bottom: 12px; box-shadow: var(--shadow);
+}
+@media (max-width: 860px) { .att-summary { top: calc(56px + env(safe-area-inset-top)); } }
+.att-stat { text-align: center; }
+.att-stat b { display: block; font-size: 22px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.att-stat span { font-size: 12px; color: var(--text-2); }
+.att-stat.green b { color: var(--green); }
+.att-stat.red b { color: var(--red); }
+.att-row { padding: 12px 14px; border-top: 1px solid var(--border); transition: background .2s; }
+.att-row:first-child { border-top: 0; }
+.att-row.saved { background: #f6fbf8; }
+.att-name { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; min-height: 28px; }
+.att-name a { color: var(--text); font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.att-name .comment-btn { min-height: 30px; padding: 0 9px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font-size: 13px; color: var(--text-2); cursor: pointer; max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.att-name .comment-btn.has { color: var(--text); background: var(--amber-soft); border-color: #f3dcae; }
+.att-statuses { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.att-btn {
+  min-height: 46px; border-radius: 11px; border: 1.5px solid var(--border); background: var(--surface-2);
+  font-weight: 650; font-size: 14px; color: var(--text-2); cursor: pointer; padding: 0 2px;
+  transition: background .12s, border-color .12s, color .12s, transform .08s; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1;
+}
+.att-btn:active { transform: scale(.94); }
+.att-btn.on.present { background: var(--green); border-color: var(--green); color: #fff; }
+.att-btn.on.absent { background: var(--red); border-color: var(--red); color: #fff; }
+.att-btn.on.late { background: var(--amber); border-color: var(--amber); color: #fff; }
+.att-btn.on.excused { background: var(--blue); border-color: var(--blue); color: #fff; }
+.att-btn.on.released { background: var(--violet); border-color: var(--violet); color: #fff; }
+@media (min-width: 861px) {
+  .att-row { display: flex; align-items: center; gap: 16px; }
+  .att-name { flex: 1; margin: 0; min-width: 0; }
+  .att-statuses { grid-template-columns: repeat(5, 86px); }
+  .att-btn { min-height: 40px; }
+}
+.save-state { font-size: 12px; color: var(--text-3); }
+
+/* ---------- Календарь ---------- */
+.cal-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.cal-nav .period { font-weight: 650; font-size: 16px; flex: 1; min-width: 140px; }
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+.week-day { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); min-height: 140px; display: flex; flex-direction: column; overflow: hidden; }
+.week-day.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.week-day-head { padding: 8px 10px; font-size: 13px; font-weight: 650; color: var(--text-2); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+.week-day.today .week-day-head { color: var(--accent); }
+.week-item { display: block; margin: 6px 6px 0; padding: 6px 8px; border-radius: 8px; background: var(--accent-soft); color: var(--text); font-size: 12.5px; line-height: 1.3; border-left: 3px solid var(--accent); }
+.week-item:last-child { margin-bottom: 6px; }
+.week-item b { font-variant-numeric: tabular-nums; }
+.week-item.cancelled { background: var(--gray-soft); border-left-color: var(--text-3); text-decoration: line-through; color: var(--text-2); }
+.week-item.conflict { background: var(--red-soft); border-left-color: var(--red); }
+@media (max-width: 860px) {
+  .week { grid-template-columns: 1fr; gap: 8px; }
+  .week-day { min-height: 0; }
+  .week-day .empty-day { display: none; }
+}
+.month { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); background: var(--border); gap: 1px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.month-h { background: var(--surface-2); text-align: center; font-size: 12px; font-weight: 650; color: var(--text-2); padding: 6px 0; }
+.month-cell { background: var(--surface); min-height: 92px; padding: 5px; color: inherit; display: flex; flex-direction: column; gap: 3px; cursor: pointer; border: 0; text-align: left; }
+.month-cell:hover { background: var(--surface-2); }
+.month-cell.other { background: #fbfbfc; color: var(--text-3); }
+.month-cell .d { font-size: 13px; font-weight: 600; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; }
+.month-cell.today .d { background: var(--accent); color: #fff; }
+.month-ev { font-size: 11.5px; background: var(--accent-soft); border-radius: 5px; padding: 1px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.month-ev.cancelled { background: var(--gray-soft); text-decoration: line-through; }
+.month-ev.conflict { background: var(--red-soft); }
+.month-more { font-size: 11px; color: var(--text-3); }
+.month-dots { display: none; }
+@media (max-width: 640px) {
+  .month-cell { min-height: 52px; align-items: center; }
+  .month-ev, .month-more { display: none; }
+  .month-dots { display: flex; gap: 3px; }
+  .month-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .month-dots i.cancelled { background: var(--text-3); }
+  .month-dots i.conflict { background: var(--red); }
+}
+
+/* ---------- Группы ---------- */
+.group-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.group-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-l); padding: 16px; color: inherit; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-s); transition: box-shadow .15s, border-color .15s; }
+.group-card:hover { box-shadow: var(--shadow); border-color: var(--border-strong); }
+.progress { height: 6px; background: var(--gray-soft); border-radius: 6px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--accent); border-radius: 6px; }
+.progress i.full { background: var(--amber); }
+
+/* ---------- Профиль ---------- */
+.profile-head { display: flex; gap: 16px; align-items: center; }
+.info { display: grid; grid-template-columns: 170px 1fr; gap: 10px 14px; font-size: 14.5px; }
+.info dt { color: var(--text-2); }
+.info dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 520px) { .info { grid-template-columns: 1fr; gap: 2px; } .info dd { margin-bottom: 10px; } }
+.stat-line { display: flex; gap: 22px; flex-wrap: wrap; }
+.stat-line div b { display: block; font-size: 22px; font-variant-numeric: tabular-nums; }
+.stat-line div span { font-size: 13px; color: var(--text-2); }
+
+/* ---------- Модальные окна ---------- */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(15, 20, 30, .42); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fade .18s; }
+@keyframes fade { from { opacity: 0; } }
+.modal { background: var(--surface); border-radius: 18px; width: 100%; max-width: 520px; max-height: calc(100vh - 40px); display: flex; flex-direction: column; box-shadow: var(--shadow-l); animation: pop .22s var(--ease); }
+@keyframes pop { from { transform: translateY(12px) scale(.98); opacity: 0; } }
+.modal-head { display: flex; align-items: center; gap: 10px; padding: 16px 18px 6px; }
+.modal-head h2 { flex: 1; font-size: 18px; }
+.modal-body { padding: 10px 18px 18px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 640px) {
+  .modal-backdrop { align-items: flex-end; padding: 0; }
+  .modal { max-width: none; border-radius: 20px 20px 0 0; max-height: calc(100vh - 30px - env(safe-area-inset-top)); padding-bottom: env(safe-area-inset-bottom); animation: slide-up .26s var(--ease); }
+  .modal-head::before { content: ""; position: absolute; left: 50%; transform: translateX(-50%); margin-top: -10px; width: 38px; height: 4px; border-radius: 4px; background: var(--border-strong); }
+  .modal-head { position: relative; padding-top: 20px; }
+  .form-actions { flex-direction: column-reverse; }
+  .form-actions .btn { width: 100%; min-height: 48px; }
+}
+@keyframes slide-up { from { transform: translateY(100%); } }
+
+/* ---------- Уведомления (тосты) ---------- */
+#toasts { position: fixed; left: 50%; transform: translateX(-50%); bottom: 24px; z-index: 200; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; width: max-content; max-width: calc(100vw - 24px); }
+@media (max-width: 860px) { #toasts { bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 12px); } }
+.toast { background: #1d222b; color: #fff; padding: 11px 16px; border-radius: 12px; font-size: 14px; box-shadow: var(--shadow-l); animation: pop .2s var(--ease); pointer-events: auto; }
+.toast.error { background: var(--red); }
+.toast.success { background: #15803d; }
+
+/* ---------- Вход ---------- */
+.login { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.login-card { width: 100%; max-width: 380px; }
+.login-card .brand { justify-content: center; padding: 0 0 6px; font-size: 20px; }
+.login-card .brand-mark { width: 40px; height: 40px; border-radius: 12px; font-size: 20px; }
+
+/* ---------- Таблица ---------- */
+.table-wrap { overflow-x: auto; }
+table.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th { text-align: left; font-weight: 600; color: var(--text-2); font-size: 12.5px; padding: 10px 14px; background: var(--surface-2); border-bottom: 1px solid var(--border); }
+.table td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+.table tr:last-child td { border-bottom: 0; }
+
+.desktop-only { }
+@media (max-width: 860px) { .desktop-only { display: none !important; } }
+@media (min-width: 861px) { .mobile-only { display: none !important; } }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
+
+</style>
+</head>
+<body>
+  <div id="root">
+    <div class="boot"><div class="spinner"></div></div>
+  </div>
+  <div id="toasts" aria-live="polite"></div>
+  <div id="modal-root"></div>
+  <script type="module">
+const __m = {};
+
+// ===== js/supa.js =====
+__m["js/supa.js"] = (() => {
+
+// Лёгкий клиент Supabase без внешних зависимостей (REST + Auth).
+// Повторяет нужную часть API supabase-js, чтобы приложение не зависело от CDN.
+
+const STORAGE_KEY = 'kollegiya.auth';
+
+function createClient(baseUrl, apiKey) {
+  const url = baseUrl.replace(/\/+$/, '').replace(/\/rest\/v1$/, '');
+  const listeners = new Set();
+  let session = load();
+  let refreshing = null;
+
+  function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; } catch { return null; } }
+  function save(s) {
+    session = s;
+    try { if (s) localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); else localStorage.removeItem(STORAGE_KEY); } catch { /* приватный режим */ }
+  }
+  const emit = (event) => listeners.forEach((cb) => { try { cb(event, session); } catch (e) { console.error(e); } });
+  const fromAuthResponse = (d) => ({
+    access_token: d.access_token,
+    refresh_token: d.refresh_token,
+    expires_at: d.expires_at || Math.floor(Date.now() / 1000) + (d.expires_in || 3600),
+    user: d.user,
+  });
+  const authError = (d, status) => ({ message: d?.msg || d?.error_description || d?.message || d?.error || `Ошибка ${status}`, code: d?.error_code || d?.code, status });
+  const netError = (e) => ({ message: 'Failed to fetch', cause: e });
+
+  async function authFetch(path, { method = 'POST', body, token } = {}) {
+    let res;
+    try {
+      res = await fetch(`${url}/auth/v1${path}`, {
+        method,
+        headers: { apikey: apiKey, 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    } catch (e) { return { error: netError(e) }; }
+    const data = await res.json().catch(() => null);
+    return res.ok ? { data } : { error: authError(data, res.status) };
+  }
+
+  async function refresh() {
+    if (!session?.refresh_token) return null;
+    if (!refreshing) {
+      refreshing = (async () => {
+        const { data, error } = await authFetch('/token?grant_type=refresh_token', { body: { refresh_token: session.refresh_token } });
+        if (error) {
+          // Нет сети — оставляем сессию, попробуем позже. Отозванный токен — выходим.
+          if (error.status && error.status < 500) { save(null); emit('SIGNED_OUT'); }
+          return null;
+        }
+        save(fromAuthResponse(data));
+        emit('TOKEN_REFRESHED');
+        return session;
+      })().finally(() => { refreshing = null; });
+    }
+    return refreshing;
+  }
+
+  /** Действующий токен доступа (обновляется заранее, за минуту до истечения). */
+  async function accessToken() {
+    if (!session) return null;
+    if (session.expires_at - 60 < Date.now() / 1000) await refresh();
+    return session?.access_token || null;
+  }
+
+  // Синхронизация входа/выхода между вкладками
+  window.addEventListener('storage', (e) => {
+    if (e.key !== STORAGE_KEY) return;
+    const had = !!session;
+    session = load();
+    if (had && !session) emit('SIGNED_OUT');
+  });
+
+  const auth = {
+    async getSession() {
+      if (session && session.expires_at - 60 < Date.now() / 1000) await refresh();
+      return { data: { session } };
+    },
+    async signInWithPassword({ email, password }) {
+      const { data, error } = await authFetch('/token?grant_type=password', { body: { email, password } });
+      if (error) return { error };
+      save(fromAuthResponse(data));
+      emit('SIGNED_IN');
+      return { data: { session } };
+    },
+    async signOut() {
+      const token = session?.access_token;
+      save(null);
+      if (token) authFetch('/logout', { token }).catch(() => {});
+      emit('SIGNED_OUT');
+      return { error: null };
+    },
+    async updateUser(attrs) {
+      const { data, error } = await authFetch('/user', { method: 'PUT', body: attrs, token: await accessToken() });
+      return error ? { error } : { data: { user: data } };
+    },
+    onAuthStateChange(cb) {
+      listeners.add(cb);
+      return { data: { subscription: { unsubscribe: () => listeners.delete(cb) } } };
+    },
+  };
+
+  async function rest(method, path, { params, body, headers = {} }) {
+    const qs = params.toString();
+    const doFetch = async () => {
+      const token = await accessToken();
+      return fetch(`${url}/rest/v1/${path}${qs ? `?${qs}` : ''}`, {
+        method,
+        headers: {
+          apikey: apiKey,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+          ...headers,
+        },
+        body: body !== undefined ? JSON.stringify(body) : undefined,
+      });
+    };
+    let res;
+    try {
+      res = await doFetch();
+      if (res.status === 401 && session) { await refresh(); res = await doFetch(); }
+    } catch (e) { return { data: null, error: netError(e), count: null }; }
+    const range = res.headers.get('content-range');
+    const count = range && range.includes('/') ? Number(range.split('/')[1]) || 0 : null;
+    const text = method === 'HEAD' ? '' : await res.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+    if (!res.ok) return { data: null, error: { message: data?.message || `Ошибка ${res.status}`, code: data?.code, details: data?.details, hint: data?.hint, status: res.status }, count };
+    return { data, error: null, count };
+  }
+
+  class Query {
+    constructor(table) {
+      this.table = table;
+      this.method = 'GET';
+      this.params = new URLSearchParams();
+      this.headers = {};
+      this.prefer = [];
+      this.orders = [];
+      this.ors = [];
+      this.body = undefined;
+      this.mode = 'many';
+    }
+    select(cols = '*', opts = {}) {
+      this.params.set('select', cols.replace(/\s+/g, ''));
+      if (opts.count) this.prefer.push(`count=${opts.count}`);
+      if (opts.head) this.method = 'HEAD';
+      if (this.method !== 'GET' && this.method !== 'HEAD') this.prefer.push('return=representation');
+      return this;
+    }
+    insert(rows) { this.method = 'POST'; this.body = rows; return this; }
+    upsert(rows, { onConflict } = {}) {
+      this.method = 'POST'; this.body = rows;
+      this.prefer.push('resolution=merge-duplicates');
+      if (onConflict) this.params.set('on_conflict', onConflict);
+      return this;
+    }
+    update(patch) { this.method = 'PATCH'; this.body = patch; return this; }
+    delete() { this.method = 'DELETE'; return this; }
+    filter(col, op, val) { this.params.append(col, `${op}.${val}`); return this; }
+    eq(c, v) { return this.filter(c, 'eq', v); }
+    neq(c, v) { return this.filter(c, 'neq', v); }
+    gt(c, v) { return this.filter(c, 'gt', v); }
+    gte(c, v) { return this.filter(c, 'gte', v); }
+    lt(c, v) { return this.filter(c, 'lt', v); }
+    lte(c, v) { return this.filter(c, 'lte', v); }
+    ilike(c, v) { return this.filter(c, 'ilike', v); }
+    is(c, v) { return this.filter(c, 'is', v === null ? 'null' : v); }
+    in(c, vals) { return this.filter(c, 'in', `(${vals.map((v) => (/[,()"\s]/.test(String(v)) ? `"${String(v).replace(/"/g, '\\"')}"` : v)).join(',')})`); }
+    or(expr) { this.ors.push(expr); return this; }
+    order(col, { ascending = true } = {}) { this.orders.push(`${col}.${ascending ? 'asc' : 'desc'}`); return this; }
+    limit(n) { this.params.set('limit', String(n)); return this; }
+    single() { this.mode = 'single'; return this; }
+    maybeSingle() { this.mode = 'maybe'; return this; }
+
+    async run() {
+      if (this.orders.length) this.params.set('order', this.orders.join(','));
+      if (this.ors.length === 1) this.params.set('or', `(${this.ors[0]})`);
+      else if (this.ors.length > 1) this.params.set('and', `(${this.ors.map((o) => `or(${o})`).join(',')})`);
+      const headers = { ...this.headers };
+      if (this.mode === 'single') headers.Accept = 'application/vnd.pgrst.object+json';
+      if (this.prefer.length) headers.Prefer = this.prefer.join(',');
+      const r = await rest(this.method, this.table, { params: this.params, body: this.body, headers });
+      if (r.error) return r;
+      if (this.mode === 'maybe') {
+        const rows = Array.isArray(r.data) ? r.data : [];
+        if (rows.length > 1) return { data: null, error: { message: 'Найдено несколько записей', code: 'PGRST116' }, count: r.count };
+        return { ...r, data: rows[0] ?? null };
+      }
+      if (this.method === 'HEAD') return { ...r, data: null };
+      return r;
+    }
+    then(resolve, reject) { return this.run().then(resolve, reject); }
+  }
+
+  return {
+    auth,
+    from: (table) => new Query(table),
+    rpc: (fn, args = {}) => ({
+      then(resolve, reject) {
+        return rest('POST', `rpc/${fn}`, { params: new URLSearchParams(), body: args, headers: {} }).then(resolve, reject);
+      },
+    }),
+  };
+}
+
+return { createClient };
+})();
+
+// ===== config.js =====
+__m["config.js"] = (() => {
+
+// Настройки подключения к Supabase.
+// Эти значения публичные: данные защищают правила доступа в базе (RLS).
+const SUPABASE_URL = 'https://hgwyeingupbilttysvyv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Gu3KsF_9e3R_CzJfXc7ZTw_Vw8MbPsC';
+
+return { SUPABASE_URL, SUPABASE_KEY };
+})();
+
+// ===== js/ui.js =====
+__m["js/ui.js"] = (() => {
+
+// Общие помощники интерфейса: шаблоны, даты, тосты, модальные окна, формы.
+
+// ---------- Безопасные HTML-шаблоны ----------
+class Raw { constructor(s) { this.s = s; } toString() { return this.s; } }
+const raw = (s) => new Raw(String(s));
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function fmt(v) {
+  if (v == null || v === false) return '';
+  if (v instanceof Raw) return v.s;
+  if (Array.isArray(v)) return v.map(fmt).join('');
+  return esc(v);
+}
+/** Тег-шаблон: всё подставленное экранируется, кроме raw() и вложенных html``. */
+function html(strings, ...vals) {
+  let out = '';
+  strings.forEach((s, i) => { out += s; if (i < vals.length) out += fmt(vals[i]); });
+  return new Raw(out);
+}
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+// ---------- Даты ----------
+const pad = (n) => String(n).padStart(2, '0');
+const toISO = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const todayISO = () => toISO(new Date());
+function parseISO(s) { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); }
+function addDays(iso, n) { const d = parseISO(iso); d.setDate(d.getDate() + n); return toISO(d); }
+function addMonths(iso, n) { const d = parseISO(iso); d.setDate(1); d.setMonth(d.getMonth() + n); return toISO(d); }
+/** ISO-день недели: 1 = понедельник … 7 = воскресенье */
+const isoWeekday = (iso) => ((parseISO(iso).getDay() + 6) % 7) + 1;
+const startOfWeek = (iso) => addDays(iso, 1 - isoWeekday(iso));
+const startOfMonth = (iso) => iso.slice(0, 8) + '01';
+function endOfMonth(iso) { const d = parseISO(startOfMonth(iso)); d.setMonth(d.getMonth() + 1); d.setDate(0); return toISO(d); }
+const WEEKDAYS = ['', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+const WD_SHORT = ['', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+const fmtDate = (iso) => iso ? parseISO(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) : '—';
+const fmtDateShort = (iso) => iso ? parseISO(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '') : '—';
+const fmtDayLong = (iso) => { const s = parseISO(iso).toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' }); return s[0].toUpperCase() + s.slice(1); };
+const fmtMonth = (iso) => { const s = parseISO(iso).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }); return s[0].toUpperCase() + s.slice(1); };
+const fmtTime = (t) => (t ? String(t).slice(0, 5) : '');
+function fmtDateTime(ts) {
+  const d = new Date(ts);
+  const today = todayISO();
+  const day = toISO(d);
+  const time = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  if (day === today) return `сегодня, ${time}`;
+  if (day === addDays(today, -1)) return `вчера, ${time}`;
+  return `${fmtDateShort(day)}, ${time}`;
+}
+function ageFrom(birthISO, onISO = todayISO()) {
+  const b = parseISO(birthISO), d = parseISO(onISO);
+  let a = d.getFullYear() - b.getFullYear();
+  if (d.getMonth() < b.getMonth() || (d.getMonth() === b.getMonth() && d.getDate() < b.getDate())) a--;
+  return a;
+}
+function plural(n, one, few, many) {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+  return many;
+}
+const ageText = (a) => `${a} ${plural(a, 'год', 'года', 'лет')}`;
+function nowTime() { const d = new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+
+// ---------- Справочники ----------
+const ROLES = { admin: 'Администратор', head_coach: 'Старший тренер', coach: 'Тренер' };
+const ATHLETE_STATUS = {
+  active: { label: 'Активный', color: 'green' },
+  paused: { label: 'Временно не занимается', color: 'amber' },
+  archived: { label: 'Архив', color: '' },
+};
+/** Статусы посещения в порядке кнопок журнала. */
+const ATT = {
+  present:  { label: 'Присутствует', short: 'Был',   icon: '✓', color: 'green' },
+  absent:   { label: 'Отсутствует',  short: 'Нет',   icon: '✕', color: 'red' },
+  late:     { label: 'Опоздал',       short: 'Опозд', icon: '◔', color: 'amber' },
+  excused:  { label: 'Уважительная причина', short: 'Уваж', icon: '✎', color: 'blue' },
+  released: { label: 'Освобождён',   short: 'Осв',   icon: '○', color: 'violet' },
+};
+const ATT_ATTENDED = ['present', 'late'];
+const ATT_MISSED = ['absent', 'excused'];
+/** Сводка по списку статусов: посетил / пропустил / процент. */
+function attendanceSummary(statuses) {
+  let attended = 0, missed = 0, released = 0;
+  for (const s of statuses) {
+    if (ATT_ATTENDED.includes(s)) attended++;
+    else if (ATT_MISSED.includes(s)) missed++;
+    else if (s === 'released') released++;
+  }
+  const base = attended + missed;
+  return { attended, missed, released, total: statuses.length, percent: base ? Math.round((attended / base) * 100) : null };
+}
+const pct = (p) => (p == null ? '—' : `${p}%`);
+
+/** Состояние тренировки для бейджа. */
+function sessionState(s, today = todayISO(), now = nowTime()) {
+  if (s.status === 'cancelled') return { label: 'Отменена', color: '' };
+  if (s.status === 'completed') return { label: 'Проведена', color: 'green' };
+  const roster = Number(s.roster_size ?? 0), marked = Number(s.marked_count ?? 0);
+  if (marked > 0) return { label: `Отмечено ${marked}/${roster}`, color: marked >= roster ? 'green' : 'accent' };
+  if (s.session_date === today && fmtTime(s.start_time) <= now && now < fmtTime(s.end_time)) return { label: 'Идёт', color: 'amber' };
+  if (s.session_date < today || (s.session_date === today && now >= fmtTime(s.end_time))) return { label: 'Не отмечена', color: 'red' };
+  return { label: 'Запланирована', color: 'blue' };
+}
+/** Пересечения тренировок одного тренера в один день. Возвращает Set id. */
+function findConflicts(sessions) {
+  const out = new Set();
+  const active = sessions.filter((s) => s.status !== 'cancelled');
+  for (let i = 0; i < active.length; i++) for (let j = i + 1; j < active.length; j++) {
+    const a = active[i], b = active[j];
+    if (a.coach_id && a.coach_id === b.coach_id && a.session_date === b.session_date && a.start_time < b.end_time && b.start_time < a.end_time) { out.add(a.id); out.add(b.id); }
+  }
+  return out;
+}
+
+const AVATAR_COLORS = ['#2f5bea', '#0e9f6e', '#d97706', '#7c3aed', '#db2777', '#0891b2', '#4f46e5', '#65a30d'];
+function avatar(name, cls = '') {
+  const parts = String(name || '?').trim().split(/\s+/);
+  const ini = ((parts[0]?.[0] || '') + (parts[1]?.[0] || '')).toUpperCase() || '?';
+  let h = 0; for (const c of String(name)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return html`<span class="avatar ${cls}" style="background:${AVATAR_COLORS[h % AVATAR_COLORS.length]}">${ini}</span>`;
+}
+const fullName = (a) => [a.last_name, a.first_name, a.middle_name].filter(Boolean).join(' ');
+const shortName = (a) => [a.last_name, a.first_name].filter(Boolean).join(' ');
+const badge = (label, color = '') => html`<span class="badge ${color}">${label}</span>`;
+
+// ---------- Иконки ----------
+const ICONS = {
+  home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  calendar: '<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.6c2.4.2 4 1.8 4.5 4.4"/>',
+  group: '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
+  bell: '<path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/>',
+  more: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
+  shield: '<path d="M12 3 4.5 6v5.5c0 4.5 3.2 8.3 7.5 9.5 4.3-1.2 7.5-5 7.5-9.5V6z"/>',
+  chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  back: '<path d="M15 5l-7 7 7 7"/>',
+  chev: '<path d="M9 5l7 7-7 7"/>',
+  left: '<path d="M15 5l-7 7 7 7"/>',
+  right: '<path d="M9 5l7 7-7 7"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  logout: '<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3"/>',
+  edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+  check: '<path d="M5 12.5 10 17l9-10"/>',
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+};
+const icon = (name, cls = '') => raw(`<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`);
+
+// ---------- Состояния загрузки и ошибок ----------
+const loadingView = () => html`<div class="loading"><div class="spinner"></div></div>`;
+const emptyView = (text, emoji = '📭') => html`<div class="empty"><div class="empty-icon">${emoji}</div>${text}</div>`;
+function errorView(err, retryId = 'retry') {
+  return html`<div class="error-box"><div class="grow">${err?.message || 'Что-то пошло не так'}</div><button class="btn btn-sm" id="${retryId}">Повторить</button></div>`;
+}
+/** Загружает данные с индикатором и показывает ошибку с кнопкой «Повторить». */
+async function withLoading(el, load, render) {
+  el.innerHTML = String(loadingView());
+  try {
+    const data = await load();
+    render(data);
+  } catch (err) {
+    console.error(err);
+    el.innerHTML = String(errorView(err));
+    $('#retry', el)?.addEventListener('click', () => withLoading(el, load, render));
+  }
+}
+
+// ---------- Тосты ----------
+function toast(message, type = '') {
+  const box = $('#toasts');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = message;
+  box.appendChild(t);
+  setTimeout(() => { t.style.transition = 'opacity .3s'; t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, type === 'error' ? 4500 : 2400);
+}
+const toastError = (err) => toast(err?.message || 'Ошибка', 'error');
+
+// ---------- Модальные окна ----------
+let modalStack = [];
+function openModal({ title, body, onMount, onClose, wide = false }) {
+  const root = $('#modal-root');
+  const wrap = document.createElement('div');
+  wrap.className = 'modal-backdrop';
+  wrap.innerHTML = String(html`
+    <div class="modal" role="dialog" aria-modal="true" style="${wide ? 'max-width:720px' : ''}">
+      <div class="modal-head"><h2>${title}</h2><button class="icon-btn" data-close aria-label="Закрыть">${icon('close')}</button></div>
+      <div class="modal-body">${body}</div>
+    </div>`);
+  const close = () => {
+    if (!wrap.isConnected) return;
+    wrap.remove(); modalStack = modalStack.filter((m) => m !== close);
+    document.body.style.overflow = modalStack.length ? 'hidden' : '';
+    onClose?.();
+  };
+  wrap.addEventListener('click', (e) => { if (e.target === wrap || e.target.closest('[data-close]')) close(); });
+  root.appendChild(wrap);
+  modalStack.push(close);
+  document.body.style.overflow = 'hidden';
+  const modalEl = $('.modal-body', wrap);
+  onMount?.(modalEl, close);
+  const first = $('input:not([type=hidden]):not([type=checkbox]), select, textarea', modalEl);
+  if (first && window.matchMedia('(min-width: 861px)').matches) first.focus();
+  return close;
+}
+const closeAllModals = () => [...modalStack].forEach((c) => c());
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalStack.length) modalStack[modalStack.length - 1](); });
+
+/** Диалог подтверждения. Возвращает Promise<boolean>. */
+function confirmDialog(text, { ok = 'Подтвердить', danger = false, title = 'Подтвердите действие' } = {}) {
+  return new Promise((resolve) => {
+    let answer = false;
+    openModal({
+      title,
+      body: html`<p class="muted" style="margin-bottom:18px">${text}</p>
+        <div class="form-actions"><button class="btn" data-close>Отмена</button><button class="btn ${danger ? 'btn-danger' : 'btn-primary'}" data-yes>${ok}</button></div>`,
+      onMount(el, close) { $('[data-yes]', el).onclick = () => { answer = true; close(); }; },
+      onClose: () => resolve(answer),
+    });
+  });
+}
+
+// ---------- Формы ----------
+function field({ name, label, type = 'text', value = '', required = false, attrs = '', options = null, hint = '' }) {
+  const id = `f-${name}-${Math.random().toString(36).slice(2, 7)}`;
+  let control;
+  if (options) {
+    control = html`<select class="select" id="${id}" name="${name}" ${required ? raw('required') : ''} ${raw(attrs)}>
+      ${options.map((o) => html`<option value="${o.value}" ${String(o.value) === String(value ?? '') ? raw('selected') : ''}>${o.label}</option>`)}
+    </select>`;
+  } else if (type === 'textarea') {
+    control = html`<textarea class="textarea" id="${id}" name="${name}" ${required ? raw('required') : ''} ${raw(attrs)}>${value ?? ''}</textarea>`;
+  } else {
+    control = html`<input class="input" id="${id}" name="${name}" type="${type}" value="${value ?? ''}" ${required ? raw('required') : ''} ${raw(attrs)}>`;
+  }
+  return html`<div class="field"><label for="${id}">${label}${required ? html` <span class="req">*</span>` : ''}</label>${control}${hint ? html`<span class="faint small">${hint}</span>` : ''}</div>`;
+}
+
+const MESSAGES = {
+  valueMissing: 'Обязательное поле',
+  patternMismatch: 'Неверный формат',
+  typeMismatch: 'Неверный формат',
+  tooShort: 'Слишком коротко',
+  tooLong: 'Слишком длинно',
+  rangeUnderflow: 'Значение слишком маленькое',
+  rangeOverflow: 'Значение слишком большое',
+  badInput: 'Неверное значение',
+};
+/** Проверка формы: встроенные правила HTML + дополнительные правила. Показывает ошибки под полями. */
+function validateForm(form, extra = {}) {
+  let ok = true;
+  $$('.field', form).forEach((f) => { f.classList.remove('invalid'); $('.field-error', f)?.remove(); });
+  for (const el of form.elements) {
+    if (!el.name || el.type === 'submit') continue;
+    if (typeof el.value === 'string' && el.type !== 'file' && el.tagName !== 'SELECT') {
+      const trimmed = el.value.trim();
+      if (trimmed !== el.value && el.type !== 'password') el.value = trimmed;
+    }
+    let msg = '';
+    if (!el.checkValidity()) {
+      const v = el.validity;
+      const key = Object.keys(MESSAGES).find((k) => v[k]);
+      msg = el.dataset[`msg${key ? key[0].toUpperCase() + key.slice(1) : ''}`] || el.dataset.msg || MESSAGES[key] || 'Проверьте поле';
+    } else if (extra[el.name]) {
+      msg = extra[el.name](el.value, form) || '';
+    }
+    if (msg) {
+      ok = false;
+      const f = el.closest('.field');
+      if (f) { f.classList.add('invalid'); f.insertAdjacentHTML('beforeend', `<span class="field-error">${esc(msg)}</span>`); }
+    }
+  }
+  if (!ok) $('.field.invalid input, .field.invalid select, .field.invalid textarea', form)?.focus();
+  return ok;
+}
+/** Данные формы: пустые строки → null. */
+function formData(form) {
+  const out = {};
+  for (const el of form.elements) {
+    if (!el.name) continue;
+    if (el.type === 'checkbox') out[el.name] = el.checked;
+    else { const v = el.value.trim(); out[el.name] = v === '' ? null : v; }
+  }
+  return out;
+}
+/** Обработчик отправки формы: валидация, блокировка кнопки, вывод ошибки. */
+function onSubmit(form, handler, extra) {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('.form-error', form)?.remove();
+    if (!validateForm(form, extra)) return;
+    const btn = $('[type=submit]', form);
+    btn?.classList.add('is-busy'); if (btn) btn.disabled = true;
+    try {
+      await handler(formData(form));
+    } catch (err) {
+      console.error(err);
+      form.insertAdjacentHTML('afterbegin', `<div class="form-error">${esc(err.message || 'Ошибка сохранения')}</div>`);
+      form.closest('.modal-body')?.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      btn?.classList.remove('is-busy'); if (btn) btn.disabled = false;
+    }
+  });
+}
+/** Кнопка с индикатором выполнения. */
+async function busy(btn, fn) {
+  btn.classList.add('is-busy'); btn.disabled = true;
+  try { return await fn(); } finally { btn.classList.remove('is-busy'); btn.disabled = false; }
+}
+// Экранирование скобок обязательно: браузеры компилируют pattern с флагом v
+const PHONE_PATTERN = '^\\+?[0-9 \\(\\)\\-]{7,20}$';
+
+// Безопасная работа с localStorage
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* недоступно */ } },
+};
+
+return { raw, esc, html, $, $$, pad, toISO, todayISO, parseISO, addDays, addMonths, isoWeekday, startOfWeek, startOfMonth, endOfMonth, WEEKDAYS, WD_SHORT, fmtDate, fmtDateShort, fmtDayLong, fmtMonth, fmtTime, fmtDateTime, ageFrom, plural, ageText, nowTime, ROLES, ATHLETE_STATUS, ATT, ATT_ATTENDED, ATT_MISSED, attendanceSummary, pct, sessionState, findConflicts, avatar, fullName, shortName, badge, icon, loadingView, emptyView, errorView, withLoading, toast, toastError, openModal, closeAllModals, confirmDialog, field, validateForm, formData, onSubmit, busy, PHONE_PATTERN, store };
+})();
+
+// ===== js/api.js =====
+__m["js/api.js"] = (() => {
+const { createClient } = __m["js/supa.js"];
+const { SUPABASE_URL, SUPABASE_KEY } = __m["config.js"];
+const { todayISO, addDays } = __m["js/ui.js"];
+// Единственное место, где приложение обращается к базе данных.
+// Все страницы используют только эти функции.
+
+
+
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ---------- Обработка ошибок ----------
+function toError(error) {
+  const m = error?.message || String(error || '');
+  let text = m;
+  if (/Invalid login credentials/i.test(m)) text = 'Неверная почта или пароль';
+  else if (/Email not confirmed/i.test(m)) text = 'Почта не подтверждена';
+  else if (/row-level security|permission denied/i.test(m)) text = 'Недостаточно прав для этого действия';
+  else if (error?.code === '23505') text = 'Такая запись уже существует';
+  else if (error?.code === '23503') text = 'Запись связана с другими данными, удалить нельзя';
+  else if (error?.code === '23514') text = 'Проверьте правильность заполнения полей';
+  else if (/Failed to fetch|NetworkError|Load failed|network/i.test(m)) text = 'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз';
+  else if (error?.code === 'PGRST116') text = 'Запись не найдена или нет доступа';
+  const e = new Error(text);
+  e.cause = error;
+  return e;
+}
+async function run(query) {
+  const { data, error } = await query;
+  if (error) throw toError(error);
+  return data;
+}
+async function count(query) {
+  const { count: c, error } = await query;
+  if (error) throw toError(error);
+  return c ?? 0;
+}
+/** Убирает символы, ломающие синтаксис фильтров PostgREST. */
+const clean = (s) => String(s || '').replace(/[,()*%\\]/g, ' ').trim();
+
+// ---------- Авторизация ----------
+async function getAuthSession() {
+  const { data } = await sb.auth.getSession();
+  return data.session;
+}
+async function signIn(email, password) {
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) throw toError(error);
+}
+async function signOut() { await sb.auth.signOut(); }
+const onAuthChange = (cb) => sb.auth.onAuthStateChange((event, session) => cb(event, session));
+async function getMyProfile(userId) {
+  return run(sb.from('profiles').select('*').eq('id', userId).maybeSingle());
+}
+async function changePassword(password) {
+  const { error } = await sb.auth.updateUser({ password });
+  if (error) throw toError(error);
+}
+
+// ---------- Пользователи ----------
+const listProfiles = () => run(sb.from('profiles').select('*').order('full_name'));
+const listCoaches = () => run(sb.from('profiles').select('id, full_name, role').eq('is_active', true).order('full_name'));
+const updateProfile = (id, patch) => run(sb.from('profiles').update(patch).eq('id', id).select().single());
+
+// ---------- Главная ----------
+async function dashboard(today = todayISO()) {
+  const [athletes, groups, coaches, sessions] = await Promise.all([
+    count(sb.from('athletes').select('id', { count: 'exact', head: true }).eq('status', 'active')),
+    count(sb.from('groups').select('id', { count: 'exact', head: true }).eq('is_archived', false)),
+    count(sb.from('profiles').select('id', { count: 'exact', head: true }).eq('is_active', true).in('role', ['coach', 'head_coach'])),
+    listSessions({ from: today, to: today }),
+  ]);
+  const live = sessions.filter((s) => s.status !== 'cancelled');
+  return {
+    athletes, groups, coaches, sessions,
+    sessionsToday: live.length,
+    presentToday: live.reduce((n, s) => n + Number(s.present_count || 0), 0),
+    absentToday: live.reduce((n, s) => n + Number(s.absent_count || 0), 0),
+  };
+}
+const recentChanges = (limit = 10) =>
+  run(sb.from('audit_log').select('*, actor:profiles(full_name)').order('created_at', { ascending: false }).limit(limit));
+
+// ---------- Воспитанники ----------
+async function listAthletes({ search = '', groupId = '', coachId = '', status = 'active', sort = 'name' } = {}) {
+  let q = sb.from('v_athletes').select('*');
+  const s = clean(search);
+  if (s) {
+    const parts = s.split(/\s+/).slice(0, 3);
+    for (const p of parts) q = q.or(`last_name.ilike.*${p}*,first_name.ilike.*${p}*,middle_name.ilike.*${p}*`);
+  }
+  if (groupId === 'none') q = q.is('current_group_id', null);
+  else if (groupId) q = q.eq('current_group_id', groupId);
+  if (coachId) q = q.eq('primary_coach_id', coachId);
+  if (status) q = q.eq('status', status);
+  if (sort === 'age_asc') q = q.order('birth_date', { ascending: false });
+  else if (sort === 'age_desc') q = q.order('birth_date', { ascending: true });
+  else if (sort === 'newest') q = q.order('created_at', { ascending: false });
+  else q = q.order('last_name').order('first_name');
+  return run(q.limit(1000));
+}
+const getAthlete = (id) => run(sb.from('v_athletes').select('*').eq('id', id).single());
+
+const ATHLETE_FIELDS = ['last_name', 'first_name', 'middle_name', 'birth_date', 'parent_full_name', 'parent_phone', 'start_date', 'status'];
+const pick = (obj, keys) => Object.fromEntries(keys.filter((k) => k in obj).map((k) => [k, obj[k]]));
+
+/** Создаёт воспитанника; при совпадении ФИО и даты рождения предупреждает о дубле. */
+async function findDuplicateAthlete({ last_name, first_name, birth_date }) {
+  const rows = await run(sb.from('athletes').select('id, last_name, first_name, birth_date')
+    .ilike('last_name', clean(last_name)).ilike('first_name', clean(first_name)).eq('birth_date', birth_date).limit(1));
+  return rows[0] || null;
+}
+async function createAthlete(data, groupId) {
+  const row = await run(sb.from('athletes').insert(pick(data, ATHLETE_FIELDS)).select().single());
+  if (groupId) await moveAthlete(row.id, groupId, data.start_date || todayISO());
+  return row;
+}
+const updateAthlete = (id, data) => run(sb.from('athletes').update(pick(data, ATHLETE_FIELDS)).eq('id', id).select().single());
+/** Перевод в группу (или исключение, если groupId = null) с сохранением истории. */
+const moveAthlete = (athleteId, groupId, date = todayISO()) =>
+  run(sb.rpc('move_athlete', { p_athlete: athleteId, p_group: groupId, p_date: date }));
+const athleteMemberships = (id) =>
+  run(sb.from('group_memberships').select('id, joined_on, left_on, group:groups(id, name)').eq('athlete_id', id).order('joined_on', { ascending: false }));
+async function athleteAttendance(id, from) {
+  let q = sb.from('attendance').select('status, comment, session:sessions!inner(id, session_date, start_time, group:groups(name))').eq('athlete_id', id);
+  if (from) q = q.gte('session.session_date', from);
+  const rows = await run(q.limit(2000));
+  return rows.sort((a, b) => (b.session.session_date + b.session.start_time).localeCompare(a.session.session_date + a.session.start_time));
+}
+const athleteNotes = (id) =>
+  run(sb.from('athlete_notes').select('*, author:profiles(full_name)').eq('athlete_id', id).order('created_at', { ascending: false }));
+const addNote = (athleteId, body) => run(sb.from('athlete_notes').insert({ athlete_id: athleteId, body }).select().single());
+const deleteNote = (id) => run(sb.from('athlete_notes').delete().eq('id', id));
+
+// ---------- Группы ----------
+async function listGroups({ archived = false } = {}) {
+  const [groups, members] = await Promise.all([
+    run(sb.from('groups')
+      .select('*, coaches:group_coaches(is_primary, coach_id, coach:profiles(full_name)), rules:schedule_rules(weekday, start_time, end_time, valid_to)')
+      .eq('is_archived', archived).order('name')),
+    run(sb.from('group_memberships').select('group_id').is('left_on', null)),
+  ]);
+  const counts = {};
+  for (const m of members) counts[m.group_id] = (counts[m.group_id] || 0) + 1;
+  const today = todayISO();
+  return groups.map((g) => ({
+    ...g,
+    size: counts[g.id] || 0,
+    primaryCoach: g.coaches.find((c) => c.is_primary)?.coach?.full_name || g.coaches[0]?.coach?.full_name || null,
+    rules: g.rules.filter((r) => !r.valid_to || r.valid_to >= today).sort((a, b) => a.weekday - b.weekday || a.start_time.localeCompare(b.start_time)),
+  }));
+}
+const listGroupOptions = () => run(sb.from('groups').select('id, name, max_size').eq('is_archived', false).order('name'));
+const getGroup = (id) => run(sb.from('groups').select('*').eq('id', id).single());
+const GROUP_FIELDS = ['name', 'description', 'age_min', 'age_max', 'max_size'];
+async function createGroup(data, coachId) {
+  const g = await run(sb.from('groups').insert(pick(data, GROUP_FIELDS)).select().single());
+  if (coachId) await addGroupCoach(g.id, coachId, true);
+  return g;
+}
+const updateGroup = (id, data) => run(sb.from('groups').update(pick(data, GROUP_FIELDS)).eq('id', id).select().single());
+const setGroupArchived = (id, archived) => run(sb.from('groups').update({ is_archived: archived }).eq('id', id));
+const groupCoaches = (id) =>
+  run(sb.from('group_coaches').select('coach_id, is_primary, coach:profiles(full_name, phone, role)').eq('group_id', id).order('is_primary', { ascending: false }));
+async function addGroupCoach(groupId, coachId, primary = false) {
+  if (primary) await run(sb.from('group_coaches').update({ is_primary: false }).eq('group_id', groupId).eq('is_primary', true));
+  return run(sb.from('group_coaches').insert({ group_id: groupId, coach_id: coachId, is_primary: primary }));
+}
+async function setPrimaryCoach(groupId, coachId) {
+  await run(sb.from('group_coaches').update({ is_primary: false }).eq('group_id', groupId).eq('is_primary', true));
+  return run(sb.from('group_coaches').update({ is_primary: true }).eq('group_id', groupId).eq('coach_id', coachId));
+}
+const removeGroupCoach = (groupId, coachId) => run(sb.from('group_coaches').delete().eq('group_id', groupId).eq('coach_id', coachId));
+/** Состав группы на дату. */
+async function groupRoster(groupId, date = todayISO()) {
+  const rows = await run(sb.from('group_memberships')
+    .select('joined_on, athlete:athletes(id, last_name, first_name, middle_name, birth_date, status)')
+    .eq('group_id', groupId).lte('joined_on', date).or(`left_on.is.null,left_on.gte.${date}`));
+  return rows.map((r) => ({ ...r.athlete, joined_on: r.joined_on }))
+    .sort((a, b) => a.last_name.localeCompare(b.last_name, 'ru') || a.first_name.localeCompare(b.first_name, 'ru'));
+}
+/** Посещаемость группы за период. */
+async function groupStats(groupId, from, to) {
+  const sessions = await run(sb.from('sessions').select('id, session_date, status, attendance(status)')
+    .eq('group_id', groupId).gte('session_date', from).lte('session_date', to).neq('status', 'cancelled'));
+  const held = sessions.filter((s) => s.status === 'completed' || s.attendance.length > 0);
+  return { held: held.length, statuses: held.flatMap((s) => s.attendance.map((a) => a.status)) };
+}
+
+// ---------- Расписание ----------
+const listRules = (groupId) =>
+  run(sb.from('schedule_rules').select('*, coach:profiles(full_name)').eq('group_id', groupId).order('weekday').order('start_time'));
+async function createRules(base, weekdays) {
+  const rows = weekdays.map((w) => ({ ...base, weekday: Number(w) }));
+  const created = await run(sb.from('schedule_rules').insert(rows).select());
+  resetSessionCache();
+  await ensureSessions(base.valid_from || todayISO(), addDays(todayISO(), 60));
+  return created;
+}
+/** Удаляет правило и будущие (ещё не отмеченные) тренировки по нему. */
+async function deleteRule(id) {
+  const today = todayISO();
+  const future = await run(sb.from('sessions').select('id, attendance(session_id)').eq('rule_id', id).gte('session_date', today));
+  const ids = future.filter((s) => s.attendance.length === 0).map((s) => s.id);
+  if (ids.length) await run(sb.from('sessions').delete().in('id', ids));
+  return run(sb.from('schedule_rules').delete().eq('id', id));
+}
+/** Пересечения правил тренера в тот же день недели. */
+async function ruleConflicts(coachId, weekdays, start, end) {
+  const rows = await run(sb.from('schedule_rules').select('weekday, start_time, end_time, valid_to, group:groups(name, is_archived)')
+    .eq('coach_id', coachId).in('weekday', weekdays.map(Number)).lt('start_time', end).gt('end_time', start));
+  const today = todayISO();
+  return rows.filter((r) => !r.group?.is_archived && (!r.valid_to || r.valid_to >= today));
+}
+const generated = new Set();
+/** Создаёт тренировки из правил на период (идемпотентно, кэшируется на сессию). */
+async function ensureSessions(from, to) {
+  const key = `${from}|${to}`;
+  if (generated.has(key)) return;
+  await run(sb.rpc('generate_sessions', { p_from: from, p_to: to }));
+  generated.add(key);
+}
+const resetSessionCache = () => generated.clear();
+async function listSessions({ from, to, groupId = '', coachId = '' }) {
+  let q = sb.from('v_session_summary').select('*').gte('session_date', from).lte('session_date', to);
+  if (groupId) q = q.eq('group_id', groupId);
+  if (coachId) q = q.eq('coach_id', coachId);
+  return run(q.order('session_date').order('start_time'));
+}
+const getSession = (id) => run(sb.from('v_session_summary').select('*').eq('id', id).single());
+const sessionConflicts = (coachId, date, start, end, excludeId = null) =>
+  run(sb.rpc('find_session_conflicts', { p_coach: coachId, p_date: date, p_start: start, p_end: end, p_exclude: excludeId }));
+const createSession = (data) =>
+  run(sb.from('sessions').insert({ ...pick(data, ['group_id', 'coach_id', 'session_date', 'start_time', 'end_time', 'location', 'comment']), is_extra: true }).select().single());
+const updateSession = (id, patch) => run(sb.from('sessions').update(patch).eq('id', id).select().single());
+
+// ---------- Посещаемость ----------
+async function sessionJournal(sessionId) {
+  const session = await getSession(sessionId);
+  const [roster, marks] = await Promise.all([
+    groupRoster(session.group_id, session.session_date),
+    run(sb.from('attendance').select('athlete_id, status, comment').eq('session_id', sessionId)),
+  ]);
+  return { session, roster, marks: Object.fromEntries(marks.map((m) => [m.athlete_id, m])) };
+}
+const setMark = (sessionId, athleteId, status, comment = null) =>
+  run(sb.from('attendance').upsert({ session_id: sessionId, athlete_id: athleteId, status, comment }, { onConflict: 'session_id,athlete_id' }));
+const clearMark = (sessionId, athleteId) =>
+  run(sb.from('attendance').delete().eq('session_id', sessionId).eq('athlete_id', athleteId));
+const markAll = (sessionId, status = 'present') => run(sb.rpc('mark_all', { p_session: sessionId, p_status: status }));
+
+// ---------- Уведомления ----------
+const listNotifications = () => run(sb.from('notifications').select('*').order('created_at', { ascending: false }).limit(100));
+const unreadCount = () => count(sb.from('notifications').select('id', { count: 'exact', head: true }).eq('is_read', false));
+const markNotificationRead = (id) => run(sb.from('notifications').update({ is_read: true }).eq('id', id));
+const markAllNotificationsRead = () => run(sb.from('notifications').update({ is_read: true }).eq('is_read', false));
+
+return { sb, getAuthSession, signIn, signOut, onAuthChange, getMyProfile, changePassword, listProfiles, listCoaches, updateProfile, dashboard, recentChanges, listAthletes, getAthlete, findDuplicateAthlete, createAthlete, updateAthlete, moveAthlete, athleteMemberships, athleteAttendance, athleteNotes, addNote, deleteNote, listGroups, listGroupOptions, getGroup, createGroup, updateGroup, setGroupArchived, groupCoaches, addGroupCoach, setPrimaryCoach, removeGroupCoach, groupRoster, groupStats, listRules, createRules, deleteRule, ruleConflicts, ensureSessions, resetSessionCache, listSessions, getSession, sessionConflicts, createSession, updateSession, sessionJournal, setMark, clearMark, markAll, listNotifications, unreadCount, markNotificationRead, markAllNotificationsRead };
+})();
+
+// ===== js/state.js =====
+__m["js/state.js"] = (() => {
+
+// Текущий пользователь и его права. Заполняется в app.js после входа.
+const state = {
+  user: null,     // пользователь Supabase Auth
+  profile: null,  // строка из таблицы profiles
+};
+const role = () => state.profile?.role;
+const isAdmin = () => role() === 'admin';
+const isManager = () => role() === 'admin' || role() === 'head_coach';
+const myId = () => state.profile?.id;
+
+return { state, role, isAdmin, isManager, myId };
+})();
+
+// ===== js/router.js =====
+__m["js/router.js"] = (() => {
+
+// Простой роутер на hash: #/athletes/123?tab=notes
+const routes = [];
+let notFound = null;
+let onChange = null;
+
+function route(pattern, handler) {
+  const keys = [];
+  const re = new RegExp('^' + pattern.replace(/\/:(\w+)/g, (_, k) => { keys.push(k); return '/([^/]+)'; }) + '/?$');
+  routes.push({ re, keys, handler });
+}
+const setNotFound = (h) => { notFound = h; };
+const onRouteChange = (cb) => { onChange = cb; };
+
+function current() {
+  const h = location.hash.replace(/^#/, '') || '/';
+  const [path, qs = ''] = h.split('?');
+  return { path, query: Object.fromEntries(new URLSearchParams(qs)) };
+}
+function navigate(to, { replace = false } = {}) {
+  const url = '#' + to;
+  if (replace) { history.replaceState(null, '', url); dispatch(); }
+  else if (location.hash === url) dispatch();
+  else location.hash = url;
+}
+/** Обновить параметры адреса без новой записи в истории. */
+function setQuery(params) {
+  const { path, query } = current();
+  const q = new URLSearchParams({ ...query, ...params });
+  for (const [k, v] of [...q]) if (v === '' || v == null) q.delete(k);
+  const s = q.toString();
+  history.replaceState(null, '', '#' + path + (s ? '?' + s : ''));
+}
+function dispatch() {
+  const { path, query } = current();
+  for (const r of routes) {
+    const m = path.match(r.re);
+    if (m) {
+      const params = Object.fromEntries(r.keys.map((k, i) => [k, decodeURIComponent(m[i + 1])]));
+      onChange?.(path);
+      return r.handler({ params, query, path });
+    }
+  }
+  onChange?.(path);
+  return notFound?.({ path, query });
+}
+function start() { window.addEventListener('hashchange', dispatch); dispatch(); }
+
+return { route, setNotFound, onRouteChange, current, navigate, setQuery, dispatch, start };
+})();
+
+// ===== js/layout.js =====
+__m["js/layout.js"] = (() => {
+const { html, icon, $, $$, avatar, ROLES } = __m["js/ui.js"];
+const { state, isAdmin, isManager } = __m["js/state.js"];
+const { unreadCount } = __m["js/api.js"];
+// Каркас приложения: боковое меню (компьютер), нижние вкладки (телефон), верхняя панель.
+
+
+
+function navItems() {
+  return [
+    { href: '/', label: 'Главная', icon: 'home', match: /^\/$/ },
+    { href: '/schedule', label: 'Расписание', icon: 'calendar', match: /^\/(schedule|session)/ },
+    { href: '/athletes', label: 'Воспитанники', short: 'Дети', icon: 'users', match: /^\/athletes?/ },
+    { href: '/groups', label: 'Группы', icon: 'group', match: /^\/groups?/ },
+    isManager() && { href: '/users', label: isAdmin() ? 'Пользователи' : 'Тренеры', icon: 'shield', match: /^\/users/ },
+    { href: '/notifications', label: 'Уведомления', icon: 'bell', match: /^\/notifications/, bell: true },
+  ].filter(Boolean);
+}
+
+function renderShell(root) {
+  const items = navItems();
+  const tabs = [items[0], items[1], items[2], items[3], { href: '/more', label: 'Ещё', icon: 'more', match: /^\/(more|users|notifications|profile)/, bell: true }];
+  root.innerHTML = String(html`
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="brand-mark">К</span>Коллегия</div>
+        <nav class="nav">
+          ${items.map((i) => html`<a href="#${i.href}" data-match="${i.match.source}">${icon(i.icon)}<span>${i.label}</span>${i.bell ? html`<span class="badge count hidden" data-bell></span>` : ''}</a>`)}
+        </nav>
+        <div class="sidebar-foot">
+          ${avatar(state.profile.full_name)}
+          <a class="who" href="#/profile"><b>${state.profile.full_name}</b><span class="faint small">${ROLES[state.profile.role]}</span></a>
+          <button class="icon-btn" data-logout title="Выйти" aria-label="Выйти">${icon('logout')}</button>
+        </div>
+      </aside>
+      <div class="main">
+        <header class="topbar">
+          <button class="icon-btn hidden" id="back" aria-label="Назад">${icon('back')}</button>
+          <h1 id="title"></h1>
+          <div id="top-actions" class="row"></div>
+          <a class="icon-btn mobile-only" href="#/notifications" aria-label="Уведомления">${icon('bell')}<span class="dot hidden" data-bell-dot></span></a>
+        </header>
+        <main class="view" id="view"></main>
+      </div>
+      <nav class="tabbar">
+        ${tabs.map((t) => html`<a href="#${t.href}" data-match="${t.match.source}">${icon(t.icon)}<span>${t.short || t.label}</span>${t.href === '/more' ? html`<span class="dot hidden" data-bell-dot></span>` : ''}</a>`)}
+      </nav>
+    </div>`);
+  $('#back').addEventListener('click', () => {
+    if (navDepth > 0) history.back();
+    else location.hash = backFallback;
+  });
+}
+
+let backFallback = '#/';
+let navDepth = -1;
+/** Вызывается при каждой смене страницы: первая страница сессии не считается. */
+const noteNavigation = () => { navDepth++; };
+/** Заголовок страницы, кнопка «Назад» и действия справа. */
+function setTitle(title, { back = null, actions = '' } = {}) {
+  document.title = `${title} — Коллегия`;
+  $('#title').textContent = title;
+  const b = $('#back');
+  b.classList.toggle('hidden', !back);
+  if (back) backFallback = '#' + back;
+  $('#top-actions').innerHTML = String(actions);
+}
+/** Новый пустой контейнер страницы (сбрасывает старые обработчики). */
+function freshView() {
+  const old = $('#view');
+  const el = old.cloneNode(false);
+  old.replaceWith(el);
+  window.scrollTo(0, 0);
+  return el;
+}
+function highlightNav(path) {
+  $$('[data-match]').forEach((a) => a.classList.toggle('active', new RegExp(a.dataset.match).test(path)));
+}
+async function refreshBell() {
+  try {
+    const n = await unreadCount();
+    $$('[data-bell]').forEach((b) => { b.textContent = n; b.classList.toggle('hidden', !n); });
+    $$('[data-bell-dot]').forEach((d) => d.classList.toggle('hidden', !n));
+  } catch { /* не критично */ }
+}
+
+return { renderShell, noteNavigation, setTitle, freshView, highlightNav, refreshBell };
+})();
+
+// ===== js/pages/login.js =====
+__m["js/pages/login.js"] = (() => {
+const { html, $, field, onSubmit } = __m["js/ui.js"];
+const { signIn, getAuthSession } = __m["js/api.js"];
+
+
+function loginPage(root, { onSuccess }) {
+  document.title = 'Вход — Коллегия';
+  root.innerHTML = String(html`
+    <div class="login">
+      <div class="login-card">
+        <div class="brand"><span class="brand-mark">К</span></div>
+        <h1 style="text-align:center;font-size:22px;margin:8px 0 4px">Тренерская коллегия</h1>
+        <p class="muted" style="text-align:center;margin-bottom:22px">Войдите, чтобы продолжить</p>
+        <form class="card card-pad form" novalidate>
+          ${field({ name: 'email', label: 'Почта', type: 'email', required: true, attrs: 'autocomplete="username" inputmode="email" autocapitalize="off"' })}
+          ${field({ name: 'password', label: 'Пароль', type: 'password', required: true, attrs: 'autocomplete="current-password" minlength="6"' })}
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Войти</button>
+        </form>
+        <p class="faint small" style="text-align:center;margin-top:16px">Нет доступа? Обратитесь к администратору клуба.</p>
+      </div>
+    </div>`);
+  const form = $('form', root);
+  onSubmit(form, async ({ email, password }) => {
+    await signIn(email.toLowerCase(), password);
+    const session = await getAuthSession();
+    onSuccess(session.user);
+  });
+}
+
+return { default: loginPage };
+})();
+
+// ===== js/pages/dashboard.js =====
+__m["js/pages/dashboard.js"] = (() => {
+const { html, withLoading, todayISO, addDays, fmtDayLong, fmtTime, sessionState, badge, emptyView, fmtDateTime, WD_SHORT, icon, findConflicts } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { state, isManager, isAdmin } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+
+
+
+
+function dashboardPage(view) {
+  setTitle('Главная');
+  const today = todayISO();
+  withLoading(view, async () => {
+    await api.ensureSessions(today, addDays(today, 14));
+    const [d, changes] = await Promise.all([
+      api.dashboard(today),
+      isManager() ? api.recentChanges(10) : Promise.resolve(null),
+    ]);
+    return { d, changes };
+  }, ({ d, changes }) => {
+    const conflicts = findConflicts(d.sessions);
+    view.innerHTML = String(html`
+      <p class="muted" style="margin:-2px 0 16px">${greeting()}, ${state.profile.full_name}. ${fmtDayLong(today)}.</p>
+      <div class="kpis">
+        ${kpi('Воспитанников', d.athletes, '#/athletes')}
+        ${kpi('Групп', d.groups, '#/groups')}
+        ${kpi('Тренеров', d.coaches, isManager() ? '#/users' : null)}
+        ${kpi('Тренировок сегодня', d.sessionsToday, '#/schedule?view=day')}
+        ${kpi('Присутствуют', d.presentToday, '#/schedule?view=day', 'green')}
+        ${kpi('Отсутствуют', d.absentToday, '#/schedule?view=day', 'red')}
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h2>Сегодняшние тренировки</h2><a class="btn btn-sm btn-ghost" href="#/schedule">Расписание ${icon('chev')}</a></div>
+        ${d.sessions.length
+          ? html`<div class="list">${d.sessions.map((s) => sessionRow(s, conflicts.has(s.id)))}</div>`
+          : html`<div class="card">${emptyView('Сегодня тренировок нет', '🌤')}</div>`}
+      </div>
+
+      ${changes ? html`
+        <div class="section">
+          <div class="section-head"><h2>Последние изменения</h2></div>
+          ${changes.length
+            ? html`<div class="list">${changes.map(changeRow)}</div>`
+            : html`<div class="card">${emptyView('Изменений пока нет')}</div>`}
+        </div>` : ''}
+
+      ${isAdmin() && d.groups === 0 ? html`
+        <div class="section note">
+          <b>С чего начать:</b> создайте группу в разделе «Группы», назначьте тренера, добавьте расписание и воспитанников.
+          Тренировки появятся в календаре автоматически.
+        </div>` : ''}
+    `);
+  });
+}
+
+function greeting() {
+  const h = new Date().getHours();
+  return h < 6 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер';
+}
+const kpi = (label, value, href, color = '') => href
+  ? html`<a class="kpi" href="${href}"><div class="kpi-label">${label}</div><div class="kpi-value ${color}">${value}</div></a>`
+  : html`<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value ${color}">${value}</div></div>`;
+
+function sessionRow(s, conflict = false) {
+  const st = sessionState(s);
+  return html`<a class="session ${s.status === 'cancelled' ? 'cancelled' : ''} ${conflict ? 'conflict' : ''}" href="#/session/${s.id}">
+    <div class="session-time"><b>${fmtTime(s.start_time)}</b><span>${fmtTime(s.end_time)}</span></div>
+    <div class="session-bar"></div>
+    <div class="grow">
+      <div class="title">${s.group_name}${s.is_extra ? html` <span class="badge violet">разовая</span>` : ''}</div>
+      <div class="sub">${s.coach_name || 'Тренер не назначен'} · ${s.roster_size} ${plural(s.roster_size)}${s.location ? ` · ${s.location}` : ''}</div>
+    </div>
+    <div class="row" style="flex-direction:column;align-items:flex-end;gap:4px">
+      ${badge(st.label, st.color)}
+      ${conflict ? badge('Пересечение', 'red') : ''}
+    </div>
+  </a>`;
+}
+const plural = (n) => { n = Number(n); const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? 'ребёнок' : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'ребёнка' : 'детей'; };
+
+const ENTITY = { athletes: 'Воспитанник', groups: 'Группа', group_coaches: 'Тренер группы', group_memberships: 'Состав группы', schedule_rules: 'Расписание', sessions: 'Тренировка' };
+const ACTION = { insert: 'добавлено', update: 'изменено', delete: 'удалено' };
+function describe(c) {
+  const r = c.details?.new || c.details || {};
+  const old = c.details?.old || {};
+  switch (c.entity) {
+    case 'athletes': return `${r.last_name} ${r.first_name}${c.action === 'update' && r.status !== old.status ? ' — статус изменён' : ''}`;
+    case 'groups': return r.name + (c.action === 'update' && r.is_archived !== old.is_archived ? (r.is_archived ? ' — в архив' : ' — из архива') : '');
+    case 'sessions': {
+      const when = `${r.session_date?.split('-').reverse().slice(0, 2).join('.')} ${fmtTime(r.start_time)}`;
+      if (c.action === 'update' && r.status === 'cancelled' && old.status !== 'cancelled') return `${when} — отменена`;
+      if (c.action === 'update' && (r.session_date !== old.session_date || r.start_time !== old.start_time)) return `перенос на ${when}`;
+      if (c.action === 'update' && r.status === 'completed') return `${when} — проведена`;
+      return when;
+    }
+    case 'schedule_rules': return `${WD_SHORT[r.weekday] || ''} ${fmtTime(r.start_time)}–${fmtTime(r.end_time)}`;
+    case 'group_memberships': return c.action === 'update' && r.left_on ? 'перевод / исключение' : 'зачисление';
+    default: return '';
+  }
+}
+function changeRow(c) {
+  return html`<div class="list-item">
+    <div class="grow">
+      <div class="title" style="font-weight:550">${ENTITY[c.entity] || c.entity}: ${describe(c)}</div>
+      <div class="sub">${ACTION[c.action]} · ${c.actor?.full_name || 'система'} · ${fmtDateTime(c.created_at)}</div>
+    </div>
+  </div>`;
+}
+
+return { default: dashboardPage, sessionRow };
+})();
+
+// ===== js/pages/session-form.js =====
+__m["js/pages/session-form.js"] = (() => {
+const { html, $, field, onSubmit, openModal, todayISO, fmtTime, esc } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+// Форма разовой тренировки и переноса — одна на оба случая.
+
+
+/**
+ * @param {object} opts
+ * @param {object} [opts.session] — существующая тренировка (перенос) или undefined (новая разовая)
+ * @param {object} [opts.defaults] — { group_id, session_date }
+ * @param {Function} opts.onSaved
+ */
+async function openSessionForm({ session = null, defaults = {}, onSaved }) {
+  const [groups, coaches] = await Promise.all([api.listGroupOptions(), api.listCoaches()]);
+  const s = session || { session_date: defaults.session_date || todayISO(), start_time: '17:00', end_time: '18:30', group_id: defaults.group_id || '' };
+  const isNew = !session;
+  let groupCoachId = s.coach_id || '';
+
+  openModal({
+    title: isNew ? 'Разовая тренировка' : 'Перенос тренировки',
+    body: html`<form class="form" novalidate>
+      ${isNew ? field({ name: 'group_id', label: 'Группа', required: true, value: s.group_id, options: [{ value: '', label: 'Выберите группу' }, ...groups.map((g) => ({ value: g.id, label: g.name }))] }) : ''}
+      ${field({ name: 'coach_id', label: 'Тренер', required: true, value: groupCoachId, options: [{ value: '', label: 'Выберите тренера' }, ...coaches.map((c) => ({ value: c.id, label: c.full_name }))] })}
+      ${field({ name: 'session_date', label: 'Дата', type: 'date', required: true, value: s.session_date })}
+      <div class="field-row">
+        ${field({ name: 'start_time', label: 'Начало', type: 'time', required: true, value: fmtTime(s.start_time) })}
+        ${field({ name: 'end_time', label: 'Окончание', type: 'time', required: true, value: fmtTime(s.end_time) })}
+      </div>
+      ${field({ name: 'location', label: 'Место проведения', value: s.location || '', attrs: 'maxlength="200"' })}
+      ${isNew ? field({ name: 'comment', label: 'Комментарий', type: 'textarea', attrs: 'maxlength="1000" rows="2"' }) : ''}
+      <div class="conflict-box"></div>
+      <div class="form-actions">
+        <button type="button" class="btn" data-close>Отмена</button>
+        <button type="submit" class="btn btn-primary">${isNew ? 'Создать' : 'Перенести'}</button>
+      </div>
+    </form>`,
+    onMount(el, close) {
+      const form = $('form', el);
+      // При выборе группы подставляем её основного тренера
+      $('[name=group_id]', form)?.addEventListener('change', async (e) => {
+        if (!e.target.value) return;
+        try {
+          const gc = await api.groupCoaches(e.target.value);
+          const primary = gc.find((c) => c.is_primary) || gc[0];
+          if (primary) $('[name=coach_id]', form).value = primary.coach_id;
+        } catch { /* не критично */ }
+      });
+      let confirmedKey = '';
+      onSubmit(form, async (d) => {
+        const key = `${d.coach_id}|${d.session_date}|${d.start_time}|${d.end_time}`;
+        const conflicts = await api.sessionConflicts(d.coach_id, d.session_date, d.start_time, d.end_time, session?.id || null);
+        const box = $('.conflict-box', form);
+        if (conflicts.length && confirmedKey !== key) {
+          confirmedKey = key;
+          box.innerHTML = `<div class="warn"><b>Пересечение у тренера:</b> ${conflicts.map((c) => `${esc(fmtTime(c.start_time))}–${esc(fmtTime(c.end_time))}`).join(', ')}. Нажмите ещё раз, чтобы сохранить всё равно.</div>`;
+          return;
+        }
+        box.innerHTML = '';
+        const saved = isNew
+          ? await api.createSession(d)
+          : await api.updateSession(session.id, { coach_id: d.coach_id, session_date: d.session_date, start_time: d.start_time, end_time: d.end_time, location: d.location });
+        close();
+        onSaved?.(saved);
+      }, {
+        end_time: (v, f) => (v && f.start_time.value && v <= f.start_time.value ? 'Окончание должно быть позже начала' : ''),
+      });
+    },
+  });
+}
+
+return { openSessionForm };
+})();
+
+// ===== js/pages/schedule.js =====
+__m["js/pages/schedule.js"] = (() => {
+const { html, $, icon, todayISO, addDays, addMonths, startOfWeek, startOfMonth, endOfMonth, parseISO, isoWeekday, fmtDayLong, fmtMonth, fmtDateShort, fmtTime, WD_SHORT, emptyView, withLoading, findConflicts, toast, toastError, } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { isManager } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+const { setQuery } = __m["js/router.js"];
+const { sessionRow } = __m["js/pages/dashboard.js"];
+const { openSessionForm } = __m["js/pages/session-form.js"];
+
+
+
+
+
+
+
+function schedulePage(view, { query }) {
+  const narrow = window.matchMedia('(max-width: 860px)').matches;
+  const st = {
+    mode: ['day', 'week', 'month'].includes(query.view) ? query.view : (narrow ? 'day' : 'week'),
+    date: /^\d{4}-\d{2}-\d{2}$/.test(query.date || '') ? query.date : todayISO(),
+    groupId: query.group || '',
+    coachId: query.coach || '',
+  };
+  setTitle('Расписание', {
+    actions: isManager() ? html`<button class="btn btn-primary btn-sm" data-add>${icon('plus')}<span class="desktop-only">Разовая тренировка</span></button>` : '',
+  });
+
+  view.innerHTML = String(html`
+    <div class="toolbar">
+      <div class="segmented" data-modes>
+        ${[['day', 'День'], ['week', 'Неделя'], ['month', 'Месяц']].map(([m, l]) => html`<button data-m="${m}" class="${st.mode === m ? 'on' : ''}">${l}</button>`)}
+      </div>
+      <select class="select" data-f="groupId"><option value="">Все группы</option></select>
+      ${isManager() ? html`<select class="select" data-f="coachId"><option value="">Все тренеры</option></select>` : ''}
+    </div>
+    <div class="cal-nav">
+      <button class="icon-btn" data-nav="-1" aria-label="Назад">${icon('left')}</button>
+      <button class="icon-btn" data-nav="1" aria-label="Вперёд">${icon('right')}</button>
+      <div class="period" data-period></div>
+      <button class="btn btn-sm" data-today>Сегодня</button>
+    </div>
+    <div data-body></div>`);
+
+  Promise.all([api.listGroupOptions(), isManager() ? api.listCoaches() : []]).then(([groups, coaches]) => {
+    const g = $('[data-f=groupId]', view);
+    g.insertAdjacentHTML('beforeend', String(html`${groups.map((x) => html`<option value="${x.id}">${x.name}</option>`)}`));
+    g.value = st.groupId;
+    const c = $('[data-f=coachId]', view);
+    if (c) { c.insertAdjacentHTML('beforeend', String(html`${coaches.map((x) => html`<option value="${x.id}">${x.full_name}</option>`)}`)); c.value = st.coachId; }
+  }).catch(() => {});
+
+  const body = $('[data-body]', view);
+
+  function range() {
+    if (st.mode === 'day') return [st.date, st.date];
+    if (st.mode === 'week') { const s = startOfWeek(st.date); return [s, addDays(s, 6)]; }
+    const s = startOfWeek(startOfMonth(st.date));
+    return [s, addDays(startOfWeek(endOfMonth(st.date)), 6)];
+  }
+  function periodLabel() {
+    if (st.mode === 'day') return fmtDayLong(st.date);
+    if (st.mode === 'week') { const s = startOfWeek(st.date); return `${fmtDateShort(s)} — ${fmtDateShort(addDays(s, 6))}`; }
+    return fmtMonth(st.date);
+  }
+  function load() {
+    setQuery({ view: st.mode, date: st.date === todayISO() ? '' : st.date, group: st.groupId, coach: st.coachId });
+    $('[data-period]', view).textContent = periodLabel();
+    const [from, to] = range();
+    withLoading(body, async () => {
+      await api.ensureSessions(from, to);
+      // Пересечения считаем по всем тренировкам периода, а показываем с учётом фильтров
+      const all = await api.listSessions({ from, to });
+      const conflicts = findConflicts(all);
+      const shown = all.filter((s) => (!st.groupId || s.group_id === st.groupId) && (!st.coachId || s.coach_id === st.coachId));
+      return { sessions: shown, conflicts };
+    }, ({ sessions, conflicts }) => {
+      if (st.mode === 'day') drawDay(sessions, conflicts);
+      else if (st.mode === 'week') drawWeek(sessions, conflicts, from);
+      else drawMonth(sessions, conflicts, from, to);
+    });
+  }
+
+  function drawDay(sessions, conflicts) {
+    body.innerHTML = String(sessions.length
+      ? html`<div class="list">${sessions.map((s) => sessionRow(s, conflicts.has(s.id)))}</div>`
+      : html`<div class="card">${emptyView('Тренировок нет', '🗓')}</div>`);
+  }
+  function drawWeek(sessions, conflicts, from) {
+    const today = todayISO();
+    const days = [...Array(7)].map((_, i) => addDays(from, i));
+    body.innerHTML = String(html`<div class="week">${days.map((d) => {
+      const items = sessions.filter((s) => s.session_date === d);
+      return html`<div class="week-day ${d === today ? 'today' : ''} ${items.length ? '' : 'empty-day'}">
+        <div class="week-day-head"><span>${WD_SHORT[isoWeekday(d)]}, ${fmtDateShort(d)}</span>${items.length ? html`<span class="faint">${items.length}</span>` : ''}</div>
+        ${items.map((s) => html`<a class="week-item ${s.status === 'cancelled' ? 'cancelled' : ''} ${conflicts.has(s.id) ? 'conflict' : ''}" href="#/session/${s.id}">
+          <b>${fmtTime(s.start_time)}–${fmtTime(s.end_time)}</b><br>${s.group_name}<br><span class="faint">${s.coach_name || ''}</span></a>`)}
+      </div>`;
+    })}</div>
+    ${sessions.length ? '' : html`<p class="faint small" style="margin-top:12px;text-align:center">На этой неделе тренировок нет</p>`}`);
+  }
+  function drawMonth(sessions, conflicts, from, to) {
+    const today = todayISO();
+    const month = st.date.slice(0, 7);
+    const days = [];
+    for (let d = from; d <= to; d = addDays(d, 1)) days.push(d);
+    body.innerHTML = String(html`<div class="month">
+      ${[1, 2, 3, 4, 5, 6, 7].map((w) => html`<div class="month-h">${WD_SHORT[w]}</div>`)}
+      ${days.map((d) => {
+        const items = sessions.filter((s) => s.session_date === d);
+        const cls = (s) => `${s.status === 'cancelled' ? 'cancelled' : ''} ${conflicts.has(s.id) ? 'conflict' : ''}`;
+        return html`<button class="month-cell ${d.slice(0, 7) !== month ? 'other' : ''} ${d === today ? 'today' : ''}" data-day="${d}">
+          <span class="d">${parseISO(d).getDate()}</span>
+          ${items.slice(0, 3).map((s) => html`<span class="month-ev ${cls(s)}">${fmtTime(s.start_time)} ${s.group_name}</span>`)}
+          ${items.length > 3 ? html`<span class="month-more">ещё ${items.length - 3}</span>` : ''}
+          <span class="month-dots">${items.slice(0, 4).map((s) => html`<i class="${cls(s)}"></i>`)}</span>
+        </button>`;
+      })}
+    </div>`);
+  }
+
+  // ----- События -----
+  $('[data-modes]', view).addEventListener('click', (e) => {
+    const b = e.target.closest('[data-m]'); if (!b) return;
+    st.mode = b.dataset.m;
+    view.querySelectorAll('[data-m]').forEach((x) => x.classList.toggle('on', x === b));
+    load();
+  });
+  view.addEventListener('click', (e) => {
+    const nav = e.target.closest('[data-nav]');
+    if (nav) {
+      const n = Number(nav.dataset.nav);
+      st.date = st.mode === 'day' ? addDays(st.date, n) : st.mode === 'week' ? addDays(st.date, 7 * n) : addMonths(st.date, n);
+      return load();
+    }
+    if (e.target.closest('[data-today]')) { st.date = todayISO(); return load(); }
+    const cell = e.target.closest('[data-day]');
+    if (cell) {
+      st.date = cell.dataset.day; st.mode = 'day';
+      view.querySelectorAll('[data-m]').forEach((x) => x.classList.toggle('on', x.dataset.m === 'day'));
+      load();
+    }
+  });
+  view.addEventListener('change', (e) => {
+    const k = e.target.dataset.f; if (!k) return;
+    st[k] = e.target.value; load();
+  });
+  $('[data-add]')?.addEventListener('click', () =>
+    openSessionForm({ defaults: { session_date: st.date, group_id: st.groupId }, onSaved: (s) => { toast('Тренировка создана', 'success'); st.date = s.session_date; load(); } }).catch(toastError));
+
+  // Свайп влево/вправо на телефоне листает период
+  let x0 = null, y0 = null;
+  body.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  body.addEventListener('touchend', (e) => {
+    if (x0 == null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8) $(`[data-nav="${dx < 0 ? 1 : -1}"]`, view).click();
+  }, { passive: true });
+
+  load();
+}
+
+return { default: schedulePage };
+})();
+
+// ===== js/pages/session.js =====
+__m["js/pages/session.js"] = (() => {
+const { html, $, $$, withLoading, fmtDayLong, fmtTime, ATT, ageFrom, ageText, sessionState, badge, emptyView, toast, toastError, openModal, confirmDialog, attendanceSummary, pct, busy, shortName, icon, } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { isManager } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+const { openSessionForm } = __m["js/pages/session-form.js"];
+// Журнал посещаемости одной тренировки — главный экран тренера.
+
+
+
+
+
+const ORDER = ['present', 'absent', 'late', 'excused', 'released'];
+const REASONS = ['Болеет', 'Соревнования', 'Семейные обстоятельства', 'Учёба', 'Без предупреждения'];
+
+function sessionPage(view, { params }) {
+  setTitle('Посещаемость', { back: '/' });
+  const load = () => withLoading(view, () => api.sessionJournal(params.id), (data) => render(view, data, load));
+  load();
+}
+
+function render(view, { session: s, roster, marks }, reload) {
+  setTitle(s.group_name, { back: '/schedule' });
+  const cancelled = s.status === 'cancelled';
+  const st = sessionState(s);
+
+  view.innerHTML = String(html`
+    <div class="card card-pad" style="margin-bottom:12px">
+      <div class="row" style="align-items:flex-start">
+        <div class="grow">
+          <div style="font-weight:650;font-size:16px">${fmtDayLong(s.session_date)}, ${fmtTime(s.start_time)}–${fmtTime(s.end_time)}</div>
+          <div class="muted small">${s.coach_name || 'Тренер не назначен'}${s.location ? ` · ${s.location}` : ''}${s.is_extra ? ' · разовая' : ''}</div>
+        </div>
+        <span data-state>${badge(st.label, st.color)}</span>
+      </div>
+      ${isManager() ? html`<div class="row-wrap" style="margin-top:12px">
+        <button class="btn btn-sm" data-act="move">Перенести</button>
+        ${cancelled ? html`<button class="btn btn-sm" data-act="restore">Вернуть тренировку</button>`
+                    : html`<button class="btn btn-sm btn-danger" data-act="cancel">Отменить</button>`}
+        <a class="btn btn-sm btn-ghost" href="#/groups/${s.group_id}">Группа ${icon('chev')}</a>
+      </div>` : html`<div class="row-wrap" style="margin-top:10px"><a class="btn btn-sm btn-ghost" href="#/groups/${s.group_id}" style="padding-left:0">Карточка группы ${icon('chev')}</a></div>`}
+    </div>
+    ${cancelled ? html`<div class="warn">Тренировка отменена — отметить посещаемость нельзя.</div>`
+      : !roster.length ? html`<div class="card">${emptyView('В группе нет воспитанников на эту дату', '👥')}</div>`
+      : html`
+        <div class="att-summary" data-summary></div>
+        <div data-result></div>
+        <div class="list" data-rows>${roster.map((a) => row(a, marks[a.id], s.session_date))}</div>
+        <div class="section">
+          <label class="label" for="s-comment">Комментарий к тренировке</label>
+          <textarea class="textarea" id="s-comment" maxlength="1000" placeholder="Что отрабатывали, замечания…" style="margin-top:6px">${s.comment || ''}</textarea>
+        </div>
+        <div class="section" data-finish></div>`}
+  `);
+
+  // ----- Действия руководителя -----
+  $('[data-act=move]', view)?.addEventListener('click', () =>
+    openSessionForm({ session: s, onSaved: () => { toast('Тренировка перенесена', 'success'); reload(); } }).catch(toastError));
+  $('[data-act=cancel]', view)?.addEventListener('click', async (e) => {
+    if (!(await confirmDialog('Отменить тренировку? Тренеры группы получат уведомление.', { ok: 'Отменить тренировку', danger: true }))) return;
+    await busy(e.target, () => api.updateSession(s.id, { status: 'cancelled' })).then(() => { toast('Тренировка отменена'); reload(); }, toastError);
+  });
+  $('[data-act=restore]', view)?.addEventListener('click', (e) =>
+    busy(e.target, () => api.updateSession(s.id, { status: 'scheduled' })).then(reload, toastError));
+
+  if (cancelled || !roster.length) return;
+
+  // ----- Журнал -----
+  const queue = {}; // последовательные сохранения по каждому ребёнку
+  const save = (athleteId, fn) => { queue[athleteId] = (queue[athleteId] || Promise.resolve()).then(fn); return queue[athleteId]; };
+
+  function refresh() {
+    const statuses = roster.map((a) => marks[a.id]?.status).filter(Boolean);
+    const sum = attendanceSummary(statuses);
+    const unmarked = roster.length - statuses.length;
+    $('[data-summary]', view).innerHTML = String(html`
+      <div class="att-stat green"><b>${sum.attended}</b><span>пришли</span></div>
+      <div class="att-stat red"><b>${sum.missed}</b><span>нет</span></div>
+      <div class="att-stat"><b>${unmarked}</b><span>не отмечены</span></div>
+      ${unmarked ? html`<button class="btn btn-success" data-all>Все ✓</button>` : html`<span class="badge green">${pct(sum.percent)}</span>`}`);
+    $('[data-all]', view)?.addEventListener('click', markRest);
+    const completed = s.status === 'completed';
+    $('[data-finish]', view).innerHTML = String(completed
+      ? html`<div class="note">Тренировка проведена. Отметки можно исправить в любой момент — изменения сохраняются сразу.</div>`
+      : html`<button class="btn btn-primary btn-lg btn-block" data-done>${icon('check')} Завершить тренировку</button>`);
+    $('[data-done]', view)?.addEventListener('click', finish);
+    $('[data-result]', view).innerHTML = completed ? String(resultCard(roster, marks)) : '';
+    const stEl = $('[data-state]', view);
+    const ns = sessionState({ ...s, marked_count: statuses.length, roster_size: roster.length });
+    stEl.innerHTML = String(badge(ns.label, ns.color));
+  }
+
+  function updateRow(id) {
+    const a = roster.find((x) => x.id === id);
+    const el = $(`[data-id="${id}"]`, view);
+    el.outerHTML = String(row(a, marks[id], s.session_date));
+    refresh();
+  }
+
+  async function setStatus(id, status) {
+    const prev = marks[id] ? { ...marks[id] } : null;
+    const toggleOff = prev?.status === status;
+    if (toggleOff) delete marks[id];
+    else marks[id] = { athlete_id: id, status, comment: prev?.comment || null };
+    updateRow(id);
+    try {
+      await save(id, () => (toggleOff ? api.clearMark(s.id, id) : api.setMark(s.id, id, status, marks[id]?.comment ?? prev?.comment ?? null)));
+      flashSaved(id);
+    } catch (err) {
+      if (prev) marks[id] = prev; else delete marks[id];
+      updateRow(id);
+      toastError(err);
+    }
+  }
+
+  function flashSaved(id) {
+    const el = $(`[data-id="${id}"]`, view);
+    if (!el) return;
+    el.classList.add('saved');
+    setTimeout(() => el.classList.remove('saved'), 600);
+  }
+
+  async function markRest(e) {
+    await busy(e.currentTarget, async () => {
+      await api.markAll(s.id, 'present');
+      const fresh = await api.sessionJournal(s.id);
+      Object.keys(marks).forEach((k) => delete marks[k]);
+      Object.assign(marks, fresh.marks);
+      $('[data-rows]', view).innerHTML = String(html`${roster.map((a) => row(a, marks[a.id], s.session_date))}`);
+      refresh();
+      toast('Остальные отмечены как присутствующие', 'success');
+    }).catch(toastError);
+  }
+
+  async function finish(e) {
+    const unmarked = roster.filter((a) => !marks[a.id]).length;
+    if (unmarked && !(await confirmDialog(`Не отмечено: ${unmarked}. Завершить тренировку без их отметки?`, { ok: 'Завершить' }))) return;
+    await busy(e.currentTarget, () => api.updateSession(s.id, { status: 'completed' })).then(() => {
+      s.status = 'completed';
+      refresh();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      toast('Тренировка завершена', 'success');
+    }, toastError);
+  }
+
+  function openComment(id) {
+    const a = roster.find((x) => x.id === id);
+    const m = marks[id];
+    openModal({
+      title: shortName(a),
+      body: html`<form class="form" novalidate>
+        ${!m ? html`<p class="muted small">Ребёнок ещё не отмечен — при сохранении будет отмечен как «Отсутствует».</p>` : ''}
+        <div class="chips">${REASONS.map((r) => html`<button type="button" class="chip" data-reason="${r}">${r}</button>`)}</div>
+        <div class="field"><label for="c-text">Комментарий</label>
+          <textarea class="textarea" id="c-text" name="comment" maxlength="500" rows="3">${m?.comment || ''}</textarea></div>
+        <div class="form-actions"><button type="button" class="btn" data-close>Отмена</button><button type="submit" class="btn btn-primary">Сохранить</button></div>
+      </form>`,
+      onMount(el, close) {
+        const ta = $('textarea', el);
+        $$('[data-reason]', el).forEach((b) => b.addEventListener('click', () => { ta.value = b.dataset.reason; }));
+        $('form', el).addEventListener('submit', async (ev) => {
+          ev.preventDefault();
+          const comment = ta.value.trim() || null;
+          const status = marks[id]?.status || 'absent';
+          const btn = $('[type=submit]', el);
+          try {
+            await busy(btn, () => save(id, () => api.setMark(s.id, id, status, comment)));
+            marks[id] = { athlete_id: id, status, comment };
+            updateRow(id);
+            close();
+          } catch (err) { toastError(err); }
+        });
+      },
+    });
+  }
+
+  // Делегирование кликов — один обработчик на весь список
+  $('[data-rows]', view).addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-s]');
+    const rowEl = e.target.closest('[data-id]');
+    if (!rowEl) return;
+    if (btn) setStatus(rowEl.dataset.id, btn.dataset.s);
+    else if (e.target.closest('[data-comment]')) openComment(rowEl.dataset.id);
+  });
+
+  // Комментарий к тренировке сохраняется при выходе из поля
+  const ta = $('#s-comment', view);
+  ta.addEventListener('change', async () => {
+    try { await api.updateSession(s.id, { comment: ta.value.trim() || null }); toast('Комментарий сохранён', 'success'); }
+    catch (err) { toastError(err); }
+  });
+
+  refresh();
+}
+
+function row(a, mark, date) {
+  return html`<div class="att-row" data-id="${a.id}">
+    <div class="att-name">
+      <a href="#/athletes/${a.id}">${a.last_name} ${a.first_name}</a>
+      <span class="faint small nowrap">${ageText(ageFrom(a.birth_date, date))}</span>
+      <button type="button" class="comment-btn ${mark?.comment ? 'has' : ''}" data-comment title="${mark?.comment || 'Комментарий'}">${mark?.comment ? `💬 ${mark.comment}` : '💬'}</button>
+    </div>
+    <div class="att-statuses" role="group" aria-label="Статус посещения">
+      ${ORDER.map((k) => html`<button type="button" class="att-btn ${k} ${mark?.status === k ? 'on' : ''}" data-s="${k}" aria-pressed="${mark?.status === k}" title="${ATT[k].label}">
+${ATT[k].short}</button>`)}
+    </div>
+  </div>`;
+}
+
+function resultCard(roster, marks) {
+  const counts = Object.fromEntries(ORDER.map((k) => [k, 0]));
+  roster.forEach((a) => { const st = marks[a.id]?.status; if (st) counts[st]++; });
+  const sum = attendanceSummary(roster.map((a) => marks[a.id]?.status).filter(Boolean));
+  return html`<div class="card card-pad" style="margin-bottom:12px">
+    <div class="row" style="margin-bottom:10px"><h2 class="grow">Итоги занятия</h2><span class="badge green">Посещаемость ${pct(sum.percent)}</span></div>
+    <div class="stat-line">
+      ${ORDER.map((k) => html`<div><b style="color:var(--${ATT[k].color})">${counts[k]}</b><span>${ATT[k].label}</span></div>`)}
+      <div><b>${roster.length - sum.total}</b><span>Не отмечены</span></div>
+    </div>
+  </div>`;
+}
+
+return { default: sessionPage };
+})();
+
+// ===== js/pages/athlete-form.js =====
+__m["js/pages/athlete-form.js"] = (() => {
+const { html, $, field, onSubmit, openModal, todayISO, ATHLETE_STATUS, PHONE_PATTERN, fullName, fmtDate, addDays } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+// Формы воспитанника: создание/редактирование и перевод в другую группу.
+
+
+async function openAthleteForm({ athlete = null, groupId = '', onSaved }) {
+  const groups = athlete ? [] : await api.listGroupOptions();
+  const a = athlete || { start_date: todayISO(), status: 'active' };
+  const minBirth = '1990-01-02';
+  let duplicateConfirmed = false;
+
+  openModal({
+    title: athlete ? 'Редактирование' : 'Новый воспитанник',
+    body: html`<form class="form" novalidate>
+      ${field({ name: 'last_name', label: 'Фамилия', required: true, value: a.last_name, attrs: 'maxlength="100" autocapitalize="words"' })}
+      <div class="field-row stack-sm">
+        ${field({ name: 'first_name', label: 'Имя', required: true, value: a.first_name, attrs: 'maxlength="100" autocapitalize="words"' })}
+        ${field({ name: 'middle_name', label: 'Отчество', value: a.middle_name, attrs: 'maxlength="100" autocapitalize="words"' })}
+      </div>
+      <div class="field-row">
+        ${field({ name: 'birth_date', label: 'Дата рождения', type: 'date', required: true, value: a.birth_date, attrs: `min="${minBirth}" max="${todayISO()}"` })}
+        ${field({ name: 'start_date', label: 'Начало занятий', type: 'date', required: true, value: a.start_date, attrs: `max="${addDays(todayISO(), 365)}"` })}
+      </div>
+      ${field({ name: 'parent_full_name', label: 'ФИО родителя', value: a.parent_full_name, attrs: 'maxlength="200" autocapitalize="words"' })}
+      ${field({ name: 'parent_phone', label: 'Телефон родителя', type: 'tel', value: a.parent_phone, attrs: `pattern="${PHONE_PATTERN}" inputmode="tel" placeholder="+7 900 000-00-00" data-msg-pattern-mismatch="Введите номер, например +7 900 123-45-67"` })}
+      ${athlete
+        ? field({ name: 'status', label: 'Статус', value: a.status, options: Object.entries(ATHLETE_STATUS).map(([value, s]) => ({ value, label: s.label })) })
+        : field({ name: 'group_id', label: 'Группа', value: groupId, options: [{ value: '', label: 'Без группы' }, ...groups.map((g) => ({ value: g.id, label: g.name }))] })}
+      <div class="dup-box"></div>
+      <div class="form-actions">
+        <button type="button" class="btn" data-close>Отмена</button>
+        <button type="submit" class="btn btn-primary">${athlete ? 'Сохранить' : 'Добавить'}</button>
+      </div>
+    </form>`,
+    onMount(el, close) {
+      const form = $('form', el);
+      onSubmit(form, async (d) => {
+        if (!athlete && !duplicateConfirmed) {
+          const dup = await api.findDuplicateAthlete(d);
+          if (dup) {
+            duplicateConfirmed = true;
+            $('.dup-box', form).innerHTML = String(html`<div class="warn">В базе уже есть <a href="#/athletes/${dup.id}">${fullName(dup)}, ${fmtDate(dup.birth_date)}</a>. Чтобы не создавать дубль, откройте его карточку и переведите в нужную группу. Нажмите «Добавить» ещё раз, если это другой ребёнок.</div>`);
+            return;
+          }
+        }
+        const saved = athlete ? await api.updateAthlete(athlete.id, d) : await api.createAthlete(d, d.group_id);
+        close();
+        onSaved?.(saved);
+      }, {
+        birth_date: (v) => (v && v > todayISO() ? 'Дата рождения не может быть в будущем' : ''),
+      });
+      form.addEventListener('click', (e) => { if (e.target.closest('.dup-box a')) close(); });
+    },
+  });
+}
+
+async function openMoveForm({ athlete, onSaved }) {
+  const groups = await api.listGroupOptions();
+  const others = groups.filter((g) => g.id !== athlete.current_group_id);
+  openModal({
+    title: athlete.current_group_id ? 'Перевод в другую группу' : 'Зачисление в группу',
+    body: html`<form class="form" novalidate>
+      ${athlete.current_group_name ? html`<p class="muted">Сейчас: <b>${athlete.current_group_name}</b>. История посещаемости сохранится.</p>` : ''}
+      ${field({ name: 'group_id', label: 'Новая группа', options: [{ value: '', label: 'Выберите группу' }, ...others.map((g) => ({ value: g.id, label: g.name })), ...(athlete.current_group_id ? [{ value: 'none', label: '— Исключить из группы' }] : [])], required: true })}
+      ${field({ name: 'date', label: 'С какой даты', type: 'date', value: todayISO(), required: true })}
+      <div class="form-actions">
+        <button type="button" class="btn" data-close>Отмена</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </div>
+    </form>`,
+    onMount(el, close) {
+      onSubmit($('form', el), async (d) => {
+        await api.moveAthlete(athlete.id, d.group_id === 'none' ? null : d.group_id, d.date);
+        close();
+        onSaved?.();
+      });
+    },
+  });
+}
+
+return { openAthleteForm, openMoveForm };
+})();
+
+// ===== js/pages/athletes.js =====
+__m["js/pages/athletes.js"] = (() => {
+const { html, $, icon, avatar, ageFrom, ageText, ATHLETE_STATUS, badge, emptyView, loadingView, errorView, toast, store } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { isAdmin, isManager } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+const { setQuery } = __m["js/router.js"];
+const { openAthleteForm } = __m["js/pages/athlete-form.js"];
+
+
+
+
+
+
+async function athletesPage(view, { query }) {
+  setTitle('Воспитанники', {
+    actions: isAdmin() ? html`<button class="btn btn-primary btn-sm" data-add>${icon('plus')}<span class="desktop-only">Добавить</span></button>` : '',
+  });
+  const f = {
+    search: query.q || '',
+    groupId: query.group || '',
+    coachId: query.coach || '',
+    status: query.status ?? 'active',
+    sort: query.sort || store.get('athletes.sort', 'name'),
+  };
+
+  view.innerHTML = String(html`
+    <div class="toolbar">
+      <div class="search"><input class="input" type="search" placeholder="Поиск по имени и фамилии" value="${f.search}" data-f="search" enterkeyhint="search">${icon('search')}</div>
+      <select class="select" data-f="groupId"><option value="">Все группы</option></select>
+      ${isManager() ? html`<select class="select" data-f="coachId"><option value="">Все тренеры</option></select>` : ''}
+      <select class="select" data-f="status">
+        <option value="">Все статусы</option>
+        ${Object.entries(ATHLETE_STATUS).map(([v, s]) => html`<option value="${v}" ${f.status === v ? 'selected' : ''}>${s.label}</option>`)}
+      </select>
+      <select class="select" data-f="sort">
+        ${[['name', 'По фамилии'], ['age_asc', 'Младше → старше'], ['age_desc', 'Старше → младше'], ['newest', 'Недавно добавленные']]
+          .map(([v, l]) => html`<option value="${v}" ${f.sort === v ? 'selected' : ''}>${l}</option>`)}
+      </select>
+    </div>
+    <div data-list>${loadingView()}</div>`);
+
+  // Справочники для фильтров
+  Promise.all([api.listGroupOptions(), isManager() ? api.listCoaches() : []]).then(([groups, coaches]) => {
+    const gs = $('[data-f=groupId]', view);
+    gs.insertAdjacentHTML('beforeend', String(html`${groups.map((g) => html`<option value="${g.id}">${g.name}</option>`)}<option value="none">Без группы</option>`));
+    gs.value = f.groupId;
+    const cs = $('[data-f=coachId]', view);
+    if (cs) { cs.insertAdjacentHTML('beforeend', String(html`${coaches.map((c) => html`<option value="${c.id}">${c.full_name}</option>`)}`)); cs.value = f.coachId; }
+  }).catch(() => {});
+
+  const listEl = $('[data-list]', view);
+  let seq = 0;
+  async function load() {
+    const my = ++seq;
+    listEl.style.opacity = '.55';
+    try {
+      const rows = await api.listAthletes(f);
+      if (my !== seq) return;
+      listEl.innerHTML = String(rows.length
+        ? html`<p class="faint small" style="margin:0 0 8px 4px">Найдено: ${rows.length}</p><div class="list">${rows.map(item)}</div>`
+        : html`<div class="card">${emptyView(f.search || f.groupId || f.coachId ? 'Никого не найдено' : 'Воспитанников пока нет', '🧒')}</div>`);
+    } catch (err) {
+      if (my !== seq) return;
+      listEl.innerHTML = String(errorView(err));
+      $('#retry', listEl).onclick = load;
+    } finally { listEl.style.opacity = ''; }
+  }
+
+  let timer;
+  view.addEventListener('input', (e) => {
+    const key = e.target.dataset.f;
+    if (!key) return;
+    f[key] = e.target.value;
+    if (key === 'sort') store.set('athletes.sort', f.sort);
+    setQuery({ q: f.search, group: f.groupId, coach: f.coachId, status: f.status === 'active' ? '' : (f.status || 'all'), sort: f.sort === 'name' ? '' : f.sort });
+    clearTimeout(timer);
+    timer = setTimeout(load, key === 'search' ? 250 : 0);
+  });
+  if (f.status === 'all') { f.status = ''; $('[data-f=status]', view).value = ''; }
+
+  $('[data-add]')?.addEventListener('click', () =>
+    openAthleteForm({ groupId: f.groupId !== 'none' ? f.groupId : '', onSaved: (a) => { toast('Воспитанник добавлен', 'success'); location.hash = `#/athletes/${a.id}`; } }).catch((e) => toast(e.message, 'error')));
+
+  load();
+}
+
+function item(a) {
+  const st = ATHLETE_STATUS[a.status] || ATHLETE_STATUS.active;
+  return html`<a class="list-item" href="#/athletes/${a.id}">
+    ${avatar(`${a.last_name} ${a.first_name}`)}
+    <div class="grow">
+      <div class="title">${a.last_name} ${a.first_name}${a.middle_name ? ` ${a.middle_name}` : ''}</div>
+      <div class="sub">${ageText(ageFrom(a.birth_date))} · ${a.current_group_name || 'без группы'}${a.primary_coach_name ? ` · ${a.primary_coach_name}` : ''}</div>
+    </div>
+    ${a.status !== 'active' ? badge(st.label, st.color) : ''}
+    ${icon('chev', 'chev')}
+  </a>`;
+}
+
+return { default: athletesPage };
+})();
+
+// ===== js/pages/athlete.js =====
+__m["js/pages/athlete.js"] = (() => {
+const { html, $, withLoading, avatar, fullName, ageFrom, ageText, fmtDate, fmtDateShort, fmtTime, fmtDateTime, ATHLETE_STATUS, ATT, badge, emptyView, attendanceSummary, pct, toast, toastError, confirmDialog, onSubmit, addDays, todayISO, icon, } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { isAdmin, myId } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+const { openAthleteForm, openMoveForm } = __m["js/pages/athlete-form.js"];
+
+
+
+
+
+function athletePage(view, { params }) {
+  setTitle('Воспитанник', { back: '/athletes' });
+  const load = () => withLoading(view, async () => {
+    const [a, memberships, marks, notes] = await Promise.all([
+      api.getAthlete(params.id),
+      api.athleteMemberships(params.id),
+      api.athleteAttendance(params.id, addDays(todayISO(), -365)),
+      api.athleteNotes(params.id),
+    ]);
+    return { a, memberships, marks, notes };
+  }, (data) => render(view, data, load));
+  load();
+  // Удаление заметок — один обработчик на страницу
+  view.addEventListener('click', async (e) => {
+    const del = e.target.closest('[data-del-note]');
+    if (!del) return;
+    if (!(await confirmDialog('Удалить заметку?', { ok: 'Удалить', danger: true }))) return;
+    try { await api.deleteNote(del.dataset.delNote); load(); } catch (err) { toastError(err); }
+  });
+}
+
+function render(view, { a, memberships, marks, notes }, reload) {
+  setTitle(`${a.last_name} ${a.first_name}`, { back: '/athletes' });
+  const st = ATHLETE_STATUS[a.status] || ATHLETE_STATUS.active;
+  const sum30 = attendanceSummary(marks.filter((m) => m.session.session_date >= addDays(todayISO(), -30)).map((m) => m.status));
+  const sumYear = attendanceSummary(marks.map((m) => m.status));
+
+  view.innerHTML = String(html`
+    <div class="card card-pad">
+      <div class="profile-head">
+        ${avatar(`${a.last_name} ${a.first_name}`, 'avatar-lg')}
+        <div class="grow">
+          <h2 style="font-size:19px">${fullName(a)}</h2>
+          <div class="muted">${ageText(ageFrom(a.birth_date))} · ${fmtDate(a.birth_date)}</div>
+          <div style="margin-top:6px">${badge(st.label, st.color)}</div>
+        </div>
+      </div>
+      ${isAdmin() ? html`<div class="row-wrap" style="margin-top:14px">
+        <button class="btn btn-sm" data-edit>${icon('edit')} Редактировать</button>
+        <button class="btn btn-sm" data-move>${a.current_group_id ? 'Перевести в группу' : 'Зачислить в группу'}</button>
+      </div>` : ''}
+    </div>
+
+    <div class="grid-2 section">
+      <div class="card card-pad">
+        <h2 style="margin-bottom:12px">Информация</h2>
+        <dl class="info" style="margin:0">
+          <dt>Группа</dt><dd>${a.current_group_id ? html`<a href="#/groups/${a.current_group_id}">${a.current_group_name}</a>` : '—'}</dd>
+          <dt>Основной тренер</dt><dd>${a.primary_coach_name || '—'}</dd>
+          <dt>Занимается с</dt><dd>${fmtDate(a.start_date)}</dd>
+          <dt>Родитель</dt><dd>${a.parent_full_name || '—'}</dd>
+          <dt>Телефон родителя</dt><dd>${a.parent_phone ? html`<a href="tel:${a.parent_phone.replace(/[^\d+]/g, '')}">${a.parent_phone}</a>` : '—'}</dd>
+        </dl>
+      </div>
+      <div class="card card-pad">
+        <h2 style="margin-bottom:12px">Посещаемость</h2>
+        <div class="stat-line">
+          <div><b>${pct(sum30.percent)}</b><span>за 30 дней</span></div>
+          <div><b>${pct(sumYear.percent)}</b><span>за год</span></div>
+          <div><b style="color:var(--green)">${sumYear.attended}</b><span>посетил</span></div>
+          <div><b style="color:var(--red)">${sumYear.missed}</b><span>пропустил</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>История посещений</h2><span class="faint small">за последний год</span></div>
+      ${marks.length ? html`<div class="list" data-marks>${marks.slice(0, 30).map(markRow)}</div>
+        ${marks.length > 30 ? html`<button class="btn btn-block btn-ghost" data-more style="margin-top:8px">Показать все (${marks.length})</button>` : ''}`
+        : html`<div class="card">${emptyView('Отметок пока нет', '📋')}</div>`}
+    </div>
+
+    <div class="grid-2 section">
+      <div>
+        <div class="section-head"><h2>Заметки тренеров</h2></div>
+        <form class="card card-pad form" data-note novalidate style="margin-bottom:10px">
+          <div class="field"><textarea class="textarea" name="body" required maxlength="2000" rows="2" placeholder="Заметка о ребёнке…" aria-label="Текст заметки"></textarea></div>
+          <div class="form-actions"><button class="btn btn-primary btn-sm" type="submit">Добавить заметку</button></div>
+        </form>
+        ${notes.length ? html`<div class="list">${notes.map(noteRow)}</div>` : ''}
+      </div>
+      <div>
+        <div class="section-head"><h2>История групп</h2></div>
+        ${memberships.length ? html`<div class="list">${memberships.map((m) => html`
+          <div class="list-item">
+            <div class="grow"><div class="title"><a href="#/groups/${m.group?.id}">${m.group?.name}</a></div>
+            <div class="sub">с ${fmtDate(m.joined_on)}${m.left_on ? ` по ${fmtDate(m.left_on)}` : ''}</div></div>
+            ${m.left_on ? '' : badge('сейчас', 'green')}
+          </div>`)}</div>` : html`<div class="card">${emptyView('Ещё не состоял в группах', '👥')}</div>`}
+      </div>
+    </div>
+  `);
+
+  $('[data-edit]', view)?.addEventListener('click', () => openAthleteForm({ athlete: a, onSaved: () => { toast('Сохранено', 'success'); reload(); } }));
+  $('[data-move]', view)?.addEventListener('click', () => openMoveForm({ athlete: a, onSaved: () => { toast('Группа изменена', 'success'); reload(); } }).catch(toastError));
+  $('[data-more]', view)?.addEventListener('click', (e) => { $('[data-marks]', view).innerHTML = String(html`${marks.map(markRow)}`); e.target.remove(); });
+  onSubmit($('[data-note]', view), async ({ body }) => { await api.addNote(a.id, body); toast('Заметка добавлена', 'success'); reload(); });
+}
+
+function markRow(m) {
+  const s = ATT[m.status];
+  return html`<a class="list-item" href="#/session/${m.session.id}" style="min-height:52px">
+    <div class="grow"><div class="title" style="font-weight:550">${fmtDateShort(m.session.session_date)}, ${fmtTime(m.session.start_time)} · ${m.session.group?.name}</div>
+    ${m.comment ? html`<div class="sub">💬 ${m.comment}</div>` : ''}</div>
+    ${badge(s.label, s.color)}
+  </a>`;
+}
+function noteRow(n) {
+  const canDelete = isAdmin() || n.author_id === myId();
+  return html`<div class="list-item" style="align-items:flex-start">
+    <div class="grow"><div style="white-space:pre-wrap;overflow-wrap:anywhere">${n.body}</div>
+    <div class="sub" style="margin-top:4px">${n.author?.full_name || '—'} · ${fmtDateTime(n.created_at)}</div></div>
+    ${canDelete ? html`<button class="icon-btn" data-del-note="${n.id}" aria-label="Удалить" style="width:34px;height:34px">${icon('close')}</button>` : ''}
+  </div>`;
+}
+
+return { default: athletePage };
+})();
+
+// ===== js/pages/group-form.js =====
+__m["js/pages/group-form.js"] = (() => {
+const { html, $, field, onSubmit, openModal, todayISO, WD_SHORT, WEEKDAYS, fmtTime } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+// Формы группы: создание/редактирование, правило расписания.
+
+
+async function openGroupForm({ group = null, onSaved }) {
+  const coaches = group ? [] : await api.listCoaches();
+  const g = group || {};
+  openModal({
+    title: group ? 'Редактирование группы' : 'Новая группа',
+    body: html`<form class="form" novalidate>
+      ${field({ name: 'name', label: 'Название', required: true, value: g.name, attrs: 'maxlength="100"' })}
+      <div class="field-row">
+        ${field({ name: 'age_min', label: 'Возраст от', type: 'number', value: g.age_min, attrs: 'min="3" max="30" inputmode="numeric"' })}
+        ${field({ name: 'age_max', label: 'Возраст до', type: 'number', value: g.age_max, attrs: 'min="3" max="30" inputmode="numeric"' })}
+      </div>
+      ${field({ name: 'max_size', label: 'Максимум участников', type: 'number', value: g.max_size, attrs: 'min="1" max="500" inputmode="numeric"', hint: 'Оставьте пустым, если без ограничения' })}
+      ${!group ? field({ name: 'coach_id', label: 'Основной тренер', options: [{ value: '', label: 'Назначить позже' }, ...coaches.map((c) => ({ value: c.id, label: c.full_name }))] }) : ''}
+      ${field({ name: 'description', label: 'Описание', type: 'textarea', value: g.description, attrs: 'maxlength="1000" rows="3"' })}
+      <div class="form-actions">
+        <button type="button" class="btn" data-close>Отмена</button>
+        <button type="submit" class="btn btn-primary">${group ? 'Сохранить' : 'Создать'}</button>
+      </div>
+    </form>`,
+    onMount(el, close) {
+      onSubmit($('form', el), async (d) => {
+        for (const k of ['age_min', 'age_max', 'max_size']) d[k] = d[k] == null ? null : Number(d[k]);
+        const saved = group ? await api.updateGroup(group.id, d) : await api.createGroup(d, d.coach_id);
+        close();
+        onSaved?.(saved);
+      }, {
+        age_max: (v, f) => (v && f.age_min.value && Number(v) < Number(f.age_min.value) ? '«До» должно быть не меньше «от»' : ''),
+      });
+    },
+  });
+}
+
+function openRuleForm({ groupId, groupCoaches, onSaved }) {
+  const primary = groupCoaches.find((c) => c.is_primary) || groupCoaches[0];
+  const selected = new Set();
+  openModal({
+    title: 'Регулярная тренировка',
+    body: html`<form class="form" novalidate>
+      <div class="field"><span class="label">Дни недели <span class="req">*</span></span>
+        <div class="chips" data-days>${[1, 2, 3, 4, 5, 6, 7].map((d) => html`<button type="button" class="chip" data-day="${d}" title="${WEEKDAYS[d]}">${WD_SHORT[d]}</button>`)}</div>
+        <span class="hidden" style="color:var(--red);font-size:13px" data-days-err>Выберите хотя бы один день</span>
+      </div>
+      <div class="field-row">
+        ${field({ name: 'start_time', label: 'Начало', type: 'time', required: true, value: '17:00' })}
+        ${field({ name: 'end_time', label: 'Окончание', type: 'time', required: true, value: '18:30' })}
+      </div>
+      ${field({ name: 'coach_id', label: 'Тренер', required: true, value: primary?.coach_id, options: [{ value: '', label: 'Выберите тренера' }, ...groupCoaches.map((c) => ({ value: c.coach_id, label: c.coach.full_name }))], hint: groupCoaches.length ? '' : 'Сначала назначьте тренера группе' })}
+      ${field({ name: 'location', label: 'Место проведения', attrs: 'maxlength="200"' })}
+      ${field({ name: 'valid_from', label: 'Действует с', type: 'date', required: true, value: todayISO() })}
+      ${field({ name: 'comment', label: 'Комментарий', attrs: 'maxlength="500"' })}
+      <div class="conflict-box"></div>
+      <div class="form-actions">
+        <button type="button" class="btn" data-close>Отмена</button>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+      </div>
+    </form>`,
+    onMount(el, close) {
+      const form = $('form', el);
+      $('[data-days]', form).addEventListener('click', (e) => {
+        const b = e.target.closest('[data-day]');
+        if (!b) return;
+        const d = Number(b.dataset.day);
+        if (selected.has(d)) selected.delete(d); else selected.add(d);
+        b.classList.toggle('on', selected.has(d));
+        $('[data-days-err]', form).classList.add('hidden');
+      });
+      let confirmedKey = '';
+      onSubmit(form, async (d) => {
+        if (!selected.size) { $('[data-days-err]', form).classList.remove('hidden'); return; }
+        const days = [...selected].sort();
+        const key = `${d.coach_id}|${days}|${d.start_time}|${d.end_time}`;
+        const conflicts = await api.ruleConflicts(d.coach_id, days, d.start_time, d.end_time);
+        if (conflicts.length && confirmedKey !== key) {
+          confirmedKey = key;
+          $('.conflict-box', form).innerHTML = String(html`<div class="warn"><b>У тренера уже есть тренировки в это время:</b>
+            ${conflicts.map((c) => `${WD_SHORT[c.weekday]} ${fmtTime(c.start_time)}–${fmtTime(c.end_time)} (${c.group?.name})`).join('; ')}.
+            Нажмите «Добавить» ещё раз, чтобы сохранить всё равно.</div>`);
+          return;
+        }
+        await api.createRules({ group_id: groupId, coach_id: d.coach_id, start_time: d.start_time, end_time: d.end_time, location: d.location, comment: d.comment, valid_from: d.valid_from }, days);
+        close();
+        onSaved?.();
+      }, {
+        end_time: (v, f) => (v && f.start_time.value && v <= f.start_time.value ? 'Окончание должно быть позже начала' : ''),
+      });
+    },
+  });
+}
+
+return { openGroupForm, openRuleForm };
+})();
+
+// ===== js/pages/groups.js =====
+__m["js/pages/groups.js"] = (() => {
+const { html, $, $$, icon, withLoading, emptyView, WD_SHORT, fmtTime, badge, toast, toastError, store } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { isAdmin } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+const { setQuery } = __m["js/router.js"];
+const { openGroupForm } = __m["js/pages/group-form.js"];
+
+
+
+
+
+
+function groupsPage(view, { query }) {
+  setTitle('Группы', {
+    actions: isAdmin() ? html`<button class="btn btn-primary btn-sm" data-add>${icon('plus')}<span class="desktop-only">Новая группа</span></button>` : '',
+  });
+  let mode = store.get('groups.mode', 'cards');
+  let archived = query.archived === '1';
+
+  view.innerHTML = String(html`
+    <div class="toolbar">
+      <div class="segmented" data-mode>
+        <button class="${mode === 'cards' ? 'on' : ''}" data-v="cards">${icon('group')} Карточки</button>
+        <button class="${mode === 'list' ? 'on' : ''}" data-v="list">${icon('list')} Список</button>
+      </div>
+      <label class="check" style="margin-left:auto"><input type="checkbox" data-archived ${archived ? 'checked' : ''}> Архив</label>
+    </div>
+    <div data-body></div>`);
+
+  const body = $('[data-body]', view);
+  let groups = [];
+  const draw = () => {
+    body.innerHTML = String(!groups.length
+      ? html`<div class="card">${emptyView(archived ? 'Архив пуст' : isAdmin() ? 'Групп пока нет — создайте первую' : 'Вы пока не назначены ни на одну группу', '👥')}</div>`
+      : mode === 'cards' ? html`<div class="group-cards">${groups.map(card)}</div>` : html`<div class="list">${groups.map(listItem)}</div>`);
+  };
+  const load = () => withLoading(body, () => api.listGroups({ archived }), (g) => { groups = g; draw(); });
+
+  $('[data-mode]', view).addEventListener('click', (e) => {
+    const b = e.target.closest('[data-v]');
+    if (!b) return;
+    mode = b.dataset.v; store.set('groups.mode', mode);
+    $$('[data-v]', view).forEach((x) => x.classList.toggle('on', x === b));
+    draw();
+  });
+  $('[data-archived]', view).addEventListener('change', (e) => { archived = e.target.checked; setQuery({ archived: archived ? '1' : '' }); load(); });
+  $('[data-add]')?.addEventListener('click', () =>
+    openGroupForm({ onSaved: (g) => { toast('Группа создана', 'success'); location.hash = `#/groups/${g.id}`; } }).catch(toastError));
+  load();
+}
+
+function scheduleText(rules) {
+  if (!rules?.length) return 'Расписание не задано';
+  const byTime = {};
+  for (const r of rules) { const k = `${fmtTime(r.start_time)}–${fmtTime(r.end_time)}`; (byTime[k] ||= []).push(WD_SHORT[r.weekday]); }
+  return Object.entries(byTime).map(([t, d]) => `${d.join(', ')} ${t}`).join('; ');
+}
+const ageCat = (g) => (g.age_min || g.age_max ? `${g.age_min ?? '…'}–${g.age_max ?? '…'} лет` : null);
+
+function card(g) {
+  const fill = g.max_size ? Math.min(100, Math.round((g.size / g.max_size) * 100)) : null;
+  return html`<a class="group-card" href="#/groups/${g.id}">
+    <div class="row"><h3 class="grow">${g.name}</h3>${ageCat(g) ? badge(ageCat(g), 'accent') : ''}</div>
+    <div class="muted small">${g.primaryCoach || 'Тренер не назначен'}</div>
+    <div class="small">${scheduleText(g.rules)}</div>
+    <div>
+      <div class="row small" style="margin-bottom:5px"><span class="grow muted">Воспитанников</span><b class="num">${g.size}${g.max_size ? ` / ${g.max_size}` : ''}</b></div>
+      ${fill != null ? html`<div class="progress"><i class="${fill >= 100 ? 'full' : ''}" style="width:${fill}%"></i></div>` : ''}
+    </div>
+  </a>`;
+}
+function listItem(g) {
+  return html`<a class="list-item" href="#/groups/${g.id}">
+    <div class="grow">
+      <div class="title">${g.name}${ageCat(g) ? html` <span class="faint small">· ${ageCat(g)}</span>` : ''}</div>
+      <div class="sub">${g.primaryCoach || 'Тренер не назначен'} · ${scheduleText(g.rules)}</div>
+    </div>
+    <span class="badge num">${g.size}${g.max_size ? `/${g.max_size}` : ''}</span>
+    ${icon('chev', 'chev')}
+  </a>`;
+}
+
+return { default: groupsPage, scheduleText };
+})();
+
+// ===== js/pages/group.js =====
+__m["js/pages/group.js"] = (() => {
+const { html, $, withLoading, avatar, ageFrom, ageText, badge, emptyView, icon, WEEKDAYS, fmtTime, todayISO, addDays, attendanceSummary, pct, toast, toastError, confirmDialog, openModal, field, onSubmit, busy, ROLES, } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { isAdmin, isManager } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+const { openGroupForm, openRuleForm } = __m["js/pages/group-form.js"];
+const { openMoveForm } = __m["js/pages/athlete-form.js"];
+const { sessionRow } = __m["js/pages/dashboard.js"];
+
+
+
+
+
+
+
+function groupPage(view, { params }) {
+  setTitle('Группа', { back: '/groups' });
+  const id = params.id;
+  const load = () => withLoading(view, async () => {
+    const today = todayISO();
+    await api.ensureSessions(today, addDays(today, 14));
+    const [group, coaches, roster, rules, stats, upcoming] = await Promise.all([
+      api.getGroup(id), api.groupCoaches(id), api.groupRoster(id), api.listRules(id),
+      api.groupStats(id, addDays(today, -30), today),
+      api.listSessions({ from: today, to: addDays(today, 14), groupId: id }),
+    ]);
+    return { group, coaches, roster, rules, stats, upcoming };
+  }, (data) => render(view, data, load));
+  load();
+
+  // Действия по клику — один обработчик на страницу
+  view.addEventListener('click', async (e) => {
+    const t = e.target.closest('[data-a]');
+    if (!t || !view.data) return;
+    const { group, coaches, roster } = view.data;
+    const a = t.dataset.a;
+    try {
+      if (a === 'edit') openGroupForm({ group, onSaved: () => { toast('Сохранено', 'success'); load(); } });
+      else if (a === 'archive') {
+        if (!(await confirmDialog(group.is_archived ? 'Вернуть группу из архива?' : 'Отправить группу в архив? Новые тренировки по её расписанию создаваться не будут.', { ok: group.is_archived ? 'Вернуть' : 'В архив', danger: !group.is_archived }))) return;
+        await busy(t, () => api.setGroupArchived(group.id, !group.is_archived)); load();
+      } else if (a === 'add-coach') addCoach(group, coaches, load);
+      else if (a === 'primary') { await busy(t, () => api.setPrimaryCoach(group.id, t.dataset.id)); load(); }
+      else if (a === 'remove-coach') {
+        if (!(await confirmDialog('Убрать тренера из группы?', { ok: 'Убрать', danger: true }))) return;
+        await api.removeGroupCoach(group.id, t.dataset.id); load();
+      } else if (a === 'add-rule') openRuleForm({ groupId: group.id, groupCoaches: coaches, onSaved: () => { toast('Расписание добавлено', 'success'); load(); } });
+      else if (a === 'del-rule') {
+        if (!(await confirmDialog('Удалить это правило? Будущие неотмеченные тренировки по нему исчезнут из календаря.', { ok: 'Удалить', danger: true }))) return;
+        await api.deleteRule(t.dataset.id); toast('Удалено'); load();
+      } else if (a === 'add-athlete') addAthlete(group, roster, load);
+      else if (a === 'move') {
+        const athlete = await api.getAthlete(t.dataset.id);
+        openMoveForm({ athlete, onSaved: () => { toast('Готово', 'success'); load(); } });
+      }
+    } catch (err) { toastError(err); }
+  });
+}
+
+function render(view, data, reload) {
+  view.data = data;
+  const { group: g, coaches, roster, rules, stats, upcoming } = data;
+  setTitle(g.name, { back: '/groups' });
+  const sum = attendanceSummary(stats.statuses);
+  const age = g.age_min || g.age_max ? `${g.age_min ?? '…'}–${g.age_max ?? '…'} лет` : 'не указана';
+  const activeRules = rules.filter((r) => !r.valid_to || r.valid_to >= todayISO());
+
+  view.innerHTML = String(html`
+    ${g.is_archived ? html`<div class="warn" style="margin-bottom:12px">Группа в архиве.</div>` : ''}
+    <div class="card card-pad">
+      <div class="row" style="align-items:flex-start">
+        <div class="grow">
+          <div class="muted small">Возрастная категория: ${age}</div>
+          ${g.description ? html`<p style="margin-top:8px;white-space:pre-wrap">${g.description}</p>` : ''}
+        </div>
+      </div>
+      <div class="stat-line" style="margin-top:14px">
+        <div><b>${roster.length}${g.max_size ? html`<span class="faint" style="font-size:15px"> / ${g.max_size}</span>` : ''}</b><span>воспитанников</span></div>
+        <div><b>${stats.held}</b><span>тренировок за 30 дней</span></div>
+        <div><b>${pct(sum.percent)}</b><span>посещаемость</span></div>
+        <div><b style="color:var(--red)">${sum.missed}</b><span>пропусков</span></div>
+      </div>
+      ${isAdmin() ? html`<div class="row-wrap" style="margin-top:14px">
+        <button class="btn btn-sm" data-a="edit">${icon('edit')} Редактировать</button>
+        <button class="btn btn-sm ${g.is_archived ? '' : 'btn-danger'}" data-a="archive">${g.is_archived ? 'Вернуть из архива' : 'В архив'}</button>
+      </div>` : ''}
+    </div>
+
+    <div class="grid-2 section">
+      <div>
+        <div class="section-head"><h2>Тренеры</h2>${isAdmin() ? html`<button class="btn btn-sm" data-a="add-coach">${icon('plus')} Добавить</button>` : ''}</div>
+        ${coaches.length ? html`<div class="list">${coaches.map((c) => html`
+          <div class="list-item">
+            ${avatar(c.coach.full_name)}
+            <div class="grow"><div class="title">${c.coach.full_name}</div><div class="sub">${ROLES[c.coach.role]}${c.coach.phone ? ` · ${c.coach.phone}` : ''}</div></div>
+            ${c.is_primary ? badge('основной', 'accent') : isAdmin() ? html`<button class="btn btn-sm btn-ghost" data-a="primary" data-id="${c.coach_id}">Сделать основным</button>` : ''}
+            ${isAdmin() ? html`<button class="icon-btn" data-a="remove-coach" data-id="${c.coach_id}" aria-label="Убрать" style="width:34px;height:34px">${icon('close')}</button>` : ''}
+          </div>`)}</div>` : html`<div class="card">${emptyView('Тренер не назначен', '🧑‍🏫')}</div>`}
+      </div>
+      <div>
+        <div class="section-head"><h2>Расписание</h2>${isManager() && !g.is_archived ? html`<button class="btn btn-sm" data-a="add-rule">${icon('plus')} Добавить</button>` : ''}</div>
+        ${activeRules.length ? html`<div class="list">${activeRules.map((r) => html`
+          <div class="list-item">
+            <div class="grow"><div class="title">${WEEKDAYS[r.weekday]}, ${fmtTime(r.start_time)}–${fmtTime(r.end_time)}</div>
+            <div class="sub">${r.coach?.full_name || ''}${r.location ? ` · ${r.location}` : ''}${r.valid_from > todayISO() ? ` · с ${r.valid_from.split('-').reverse().join('.')}` : ''}</div></div>
+            ${isManager() ? html`<button class="icon-btn" data-a="del-rule" data-id="${r.id}" aria-label="Удалить" style="width:34px;height:34px">${icon('close')}</button>` : ''}
+          </div>`)}</div>` : html`<div class="card">${emptyView('Регулярных тренировок нет', '🗓')}</div>`}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Состав</h2>${isAdmin() && !g.is_archived ? html`<button class="btn btn-sm btn-primary" data-a="add-athlete">${icon('plus')} Добавить</button>` : ''}</div>
+      ${roster.length ? html`<div class="list">${roster.map((a) => html`
+        <div class="list-item">
+          ${avatar(`${a.last_name} ${a.first_name}`)}
+          <a class="grow" href="#/athletes/${a.id}" style="color:inherit;min-width:0"><div class="title">${a.last_name} ${a.first_name}</div><div class="sub">${ageText(ageFrom(a.birth_date))}</div></a>
+          ${isAdmin() ? html`<button class="btn btn-sm btn-ghost" data-a="move" data-id="${a.id}">Перевести</button>` : ''}
+        </div>`)}</div>` : html`<div class="card">${emptyView('В группе пока никого', '🧒')}</div>`}
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Ближайшие тренировки</h2></div>
+      ${upcoming.length ? html`<div class="list">${upcoming.slice(0, 6).map((s) => sessionRow({ ...s }))}</div>` : html`<div class="card">${emptyView('В ближайшие 2 недели тренировок нет', '🗓')}</div>`}
+    </div>`);
+}
+
+async function addCoach(group, current, reload) {
+  const all = await api.listCoaches();
+  const available = all.filter((c) => !current.some((x) => x.coach_id === c.id));
+  openModal({
+    title: 'Добавить тренера',
+    body: available.length ? html`<form class="form" novalidate>
+      ${field({ name: 'coach_id', label: 'Тренер', required: true, options: [{ value: '', label: 'Выберите' }, ...available.map((c) => ({ value: c.id, label: `${c.full_name} (${ROLES[c.role]})` }))] })}
+      <label class="check"><input type="checkbox" name="primary" ${current.length ? '' : 'checked'}> Основной тренер группы</label>
+      <div class="form-actions"><button type="button" class="btn" data-close>Отмена</button><button type="submit" class="btn btn-primary">Добавить</button></div>
+    </form>` : html`<p class="muted">Все тренеры уже в группе. Новых тренеров добавляют в разделе «Пользователи».</p>`,
+    onMount(el, close) {
+      const form = $('form', el);
+      if (form) onSubmit(form, async (d) => { await api.addGroupCoach(group.id, d.coach_id, d.primary); close(); toast('Тренер назначен', 'success'); reload(); });
+    },
+  });
+}
+
+async function addAthlete(group, roster, reload) {
+  const all = await api.listAthletes({ status: 'active' });
+  const candidates = all.filter((a) => !roster.some((r) => r.id === a.id));
+  if (group.max_size && roster.length >= group.max_size) { toast(`Группа заполнена (максимум ${group.max_size})`, 'error'); return; }
+  openModal({
+    title: 'Добавить в группу',
+    body: html`
+      <div class="search" style="margin-bottom:10px"><input class="input" type="search" placeholder="Поиск" data-q>${icon('search')}</div>
+      <p class="faint small" style="margin-bottom:8px">Если ребёнок в другой группе, он будет переведён — история сохранится. Нового ребёнка добавьте в разделе «Воспитанники».</p>
+      <div class="list" data-items style="max-height:50vh;overflow:auto"></div>`,
+    onMount(el, close) {
+      const box = $('[data-items]', el);
+      const draw = (q = '') => {
+        const s = q.toLowerCase();
+        const items = candidates.filter((a) => `${a.last_name} ${a.first_name}`.toLowerCase().includes(s)).slice(0, 100);
+        box.innerHTML = String(items.length ? html`${items.map((a) => html`
+          <button class="list-item" data-id="${a.id}">
+            ${avatar(`${a.last_name} ${a.first_name}`)}
+            <div class="grow"><div class="title">${a.last_name} ${a.first_name}</div><div class="sub">${ageText(ageFrom(a.birth_date))} · ${a.current_group_name || 'без группы'}</div></div>
+            ${icon('plus', 'chev')}
+          </button>`)}` : emptyView('Никого не найдено'));
+      };
+      draw();
+      $('[data-q]', el).addEventListener('input', (e) => draw(e.target.value));
+      box.addEventListener('click', async (e) => {
+        const b = e.target.closest('[data-id]');
+        if (!b) return;
+        try { await busy(b, () => api.moveAthlete(b.dataset.id, group.id, todayISO())); close(); toast('Добавлен в группу', 'success'); reload(); }
+        catch (err) { toastError(err); }
+      });
+    },
+  });
+}
+
+return { default: groupPage };
+})();
+
+// ===== js/pages/users.js =====
+__m["js/pages/users.js"] = (() => {
+const { html, $, withLoading, avatar, badge, ROLES, emptyView, openModal, field, onSubmit, toast, PHONE_PATTERN } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { isAdmin, myId } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+
+
+
+
+function usersPage(view) {
+  setTitle(isAdmin() ? 'Пользователи' : 'Тренеры', { back: '/more' });
+  const load = () => withLoading(view, api.listProfiles, (users) => {
+    view.innerHTML = String(html`
+      ${isAdmin() ? html`<div class="note" style="margin-bottom:14px">
+        <b>Как добавить тренера:</b> в Supabase откройте Authentication → Users → Add user → Create new user,
+        укажите его почту и пароль (Auto Confirm включён). Тренер появится в этом списке — задайте ему имя и роль,
+        затем назначьте на группу.
+      </div>` : ''}
+      ${users.length ? html`<div class="list">${users.map((u) => html`
+        <${isAdmin() ? 'button' : 'div'} class="list-item" data-id="${u.id}">
+          ${avatar(u.full_name)}
+          <div class="grow">
+            <div class="title">${u.full_name}${u.id === myId() ? html` <span class="faint small">(вы)</span>` : ''}</div>
+            <div class="sub">${ROLES[u.role]}${u.phone ? ` · ${u.phone}` : ''}</div>
+          </div>
+          ${u.is_active ? '' : badge('отключён', 'red')}
+        </${isAdmin() ? 'button' : 'div'}>`)}</div>` : emptyView('Пользователей нет')}`);
+    view.users = users;
+  });
+  load();
+  if (!isAdmin()) return;
+  view.addEventListener('click', (e) => {
+    const item = e.target.closest('[data-id]');
+    if (!item) return;
+    const u = view.users.find((x) => x.id === item.dataset.id);
+    const self = u.id === myId();
+    openModal({
+      title: u.full_name,
+      body: html`<form class="form" novalidate>
+        ${field({ name: 'full_name', label: 'ФИО', required: true, value: u.full_name, attrs: 'maxlength="200" autocapitalize="words"' })}
+        ${field({ name: 'phone', label: 'Телефон', type: 'tel', value: u.phone, attrs: `pattern="${PHONE_PATTERN}" inputmode="tel"` })}
+        ${field({ name: 'role', label: 'Роль', value: u.role, options: Object.entries(ROLES).map(([value, label]) => ({ value, label })) })}
+        <label class="check"><input type="checkbox" name="is_active" ${u.is_active ? 'checked' : ''} ${self ? 'disabled' : ''}> Доступ к приложению разрешён</label>
+        ${self ? html`<p class="faint small">Свою роль и доступ может изменить другой администратор.</p>` : ''}
+        <div class="form-actions"><button type="button" class="btn" data-close>Отмена</button><button type="submit" class="btn btn-primary">Сохранить</button></div>
+      </form>`,
+      onMount(el, close) {
+        if (self) $('[name=role]', el).disabled = true;
+        onSubmit($('form', el), async (d) => {
+          const patch = { full_name: d.full_name, phone: d.phone };
+          if (!self) { patch.role = d.role; patch.is_active = d.is_active; }
+          await api.updateProfile(u.id, patch);
+          close(); toast('Сохранено', 'success'); load();
+        });
+      },
+    });
+  });
+}
+
+return { default: usersPage };
+})();
+
+// ===== js/pages/notifications.js =====
+__m["js/pages/notifications.js"] = (() => {
+const { html, $, withLoading, emptyView, fmtDateTime, toastError } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { setTitle, refreshBell } = __m["js/layout.js"];
+
+
+
+const EMOJI = { membership: '🧒', session_cancelled: '⛔️', session_moved: '🔁', coach_assigned: '🧑‍🏫' };
+
+function notificationsPage(view) {
+  setTitle('Уведомления', { back: '/more', actions: html`<button class="btn btn-sm" data-read-all>Прочитать все</button>` });
+  const load = () => withLoading(view, api.listNotifications, (items) => {
+    view.items = items;
+    view.innerHTML = String(items.length ? html`<div class="list">${items.map((n) => html`
+      <button class="list-item" data-id="${n.id}" style="${n.is_read ? '' : 'background:var(--accent-soft)'}">
+        <span style="font-size:20px;width:28px;text-align:center">${EMOJI[n.type] || '🔔'}</span>
+        <div class="grow"><div class="title">${n.title}</div><div class="sub">${n.body || ''} · ${fmtDateTime(n.created_at)}</div></div>
+      </button>`)}</div>` : html`<div class="card">${emptyView('Уведомлений нет', '🔔')}</div>`);
+  });
+  load();
+  view.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-id]');
+    if (!b) return;
+    const n = view.items.find((x) => x.id === b.dataset.id);
+    try { if (!n.is_read) await api.markNotificationRead(n.id); } catch { /* не критично */ }
+    refreshBell();
+    if (n.link) location.hash = '#' + n.link; else load();
+  });
+  $('[data-read-all]').addEventListener('click', async () => {
+    try { await api.markAllNotificationsRead(); refreshBell(); load(); } catch (err) { toastError(err); }
+  });
+}
+
+return { default: notificationsPage };
+})();
+
+// ===== js/pages/more.js =====
+__m["js/pages/more.js"] = (() => {
+const { html, $, avatar, icon, ROLES, openModal, field, onSubmit, toast } = __m["js/ui.js"];
+const api = __m["js/api.js"];
+const { state, isManager, isAdmin } = __m["js/state.js"];
+const { setTitle } = __m["js/layout.js"];
+
+
+
+
+function morePage(view) {
+  setTitle('Ещё');
+  const p = state.profile;
+  view.innerHTML = String(html`
+    <div class="card card-pad profile-head" style="margin-bottom:16px">
+      ${avatar(p.full_name, 'avatar-lg')}
+      <div class="grow"><h2>${p.full_name}</h2><div class="muted">${ROLES[p.role]}</div><div class="faint small">${state.user?.email || ''}</div></div>
+    </div>
+    <div class="list">
+      <a class="list-item" href="#/notifications">${icon('bell')}<div class="grow title">Уведомления</div><span class="badge count hidden" data-bell></span>${icon('chev', 'chev')}</a>
+      ${isManager() ? html`<a class="list-item" href="#/users">${icon('shield')}<div class="grow title">${isAdmin() ? 'Пользователи и роли' : 'Тренеры'}</div>${icon('chev', 'chev')}</a>` : ''}
+      <button class="list-item" data-pass>${icon('edit')}<div class="grow title">Сменить пароль</div>${icon('chev', 'chev')}</button>
+      <button class="list-item" data-out style="color:var(--red)">${icon('logout')}<div class="grow title">Выйти</div></button>
+    </div>
+    <p class="faint small" style="text-align:center;margin-top:18px">Совет: в Safari нажмите «Поделиться» → «На экран Домой», чтобы открывать приложение как обычное.</p>`);
+  view.querySelectorAll('.list-item > svg:first-child').forEach((s) => { s.style.cssText = 'width:21px;height:21px;color:var(--text-2);flex:none'; });
+  $('[data-out]', view).addEventListener('click', () => api.signOut());
+  $('[data-pass]', view).addEventListener('click', () => openModal({
+    title: 'Новый пароль',
+    body: html`<form class="form" novalidate>
+      ${field({ name: 'password', label: 'Новый пароль', type: 'password', required: true, attrs: 'minlength="8" autocomplete="new-password"', hint: 'Не меньше 8 символов' })}
+      ${field({ name: 'password2', label: 'Повторите пароль', type: 'password', required: true, attrs: 'autocomplete="new-password"' })}
+      <div class="form-actions"><button type="button" class="btn" data-close>Отмена</button><button type="submit" class="btn btn-primary">Сохранить</button></div>
+    </form>`,
+    onMount(el, close) {
+      onSubmit($('form', el), async ({ password }) => { await api.changePassword(password); close(); toast('Пароль изменён', 'success'); },
+        { password2: (v, f) => (v !== f.password.value ? 'Пароли не совпадают' : '') });
+    },
+  }));
+}
+
+return { default: morePage };
+})();
+
+// ===== js/app.js =====
+__m["js/app.js"] = (() => {
+const api = __m["js/api.js"];
+const { state, isManager } = __m["js/state.js"];
+const { route, setNotFound, onRouteChange, start, dispatch } = __m["js/router.js"];
+const { renderShell, freshView, highlightNav, refreshBell, setTitle, noteNavigation } = __m["js/layout.js"];
+const { html, $, emptyView, closeAllModals } = __m["js/ui.js"];
+const loginPage = __m["js/pages/login.js"].default;
+const dashboardPage = __m["js/pages/dashboard.js"].default;
+const schedulePage = __m["js/pages/schedule.js"].default;
+const sessionPage = __m["js/pages/session.js"].default;
+const athletesPage = __m["js/pages/athletes.js"].default;
+const athletePage = __m["js/pages/athlete.js"].default;
+const groupsPage = __m["js/pages/groups.js"].default;
+const groupPage = __m["js/pages/group.js"].default;
+const usersPage = __m["js/pages/users.js"].default;
+const notificationsPage = __m["js/pages/notifications.js"].default;
+const morePage = __m["js/pages/more.js"].default;
+// Точка входа: авторизация, каркас, маршруты.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const root = $('#root');
+
+/** Обёртка страницы: проверка прав + чистый контейнер. */
+const page = (render, allowed = () => true) => (ctx) => {
+  closeAllModals();
+  const view = freshView();
+  if (!allowed()) {
+    setTitle('Нет доступа', { back: '/' });
+    view.innerHTML = String(emptyView('У вас нет прав для этого раздела', '🔒'));
+    return;
+  }
+  return render(view, ctx);
+};
+
+route('/', page(dashboardPage));
+route('/schedule', page(schedulePage));
+route('/session/:id', page(sessionPage));
+route('/athletes', page(athletesPage));
+route('/athletes/:id', page(athletePage));
+route('/groups', page(groupsPage));
+route('/groups/:id', page(groupPage));
+route('/users', page(usersPage, isManager));
+route('/notifications', page(notificationsPage));
+route('/more', page(morePage));
+route('/profile', page(morePage));
+setNotFound(page((view) => { setTitle('Страница не найдена', { back: '/' }); view.innerHTML = String(emptyView('Такой страницы нет', '🧭')); }));
+onRouteChange((path) => { highlightNav(path); noteNavigation(); refreshBell(); });
+
+let started = false;
+let bellTimer = null;
+
+function showLogin() {
+  state.user = null; state.profile = null;
+  clearInterval(bellTimer);
+  loginPage(root, { onSuccess: enter });
+}
+
+function showBlocked(text) {
+  root.innerHTML = String(html`<div class="login"><div class="card card-pad login-card stack" style="text-align:center">
+    <div style="font-size:32px">🔒</div><p>${text}</p><button class="btn" id="out">Выйти</button></div></div>`);
+  $('#out').onclick = () => api.signOut();
+}
+
+async function enter(user) {
+  root.innerHTML = '<div class="boot"><div class="spinner"></div></div>';
+  let profile;
+  try {
+    profile = await api.getMyProfile(user.id);
+  } catch (err) {
+    root.innerHTML = String(html`<div class="login"><div class="card card-pad login-card stack" style="text-align:center">
+      <p>${err.message}</p><button class="btn btn-primary" id="again">Повторить</button></div></div>`);
+    $('#again').onclick = () => enter(user);
+    return;
+  }
+  if (!profile) return showBlocked('Профиль пользователя не найден. Обратитесь к администратору.');
+  if (!profile.is_active) return showBlocked('Ваш доступ отключён. Обратитесь к администратору.');
+  state.user = user;
+  state.profile = profile;
+  renderShell(root);
+  $('[data-logout]')?.addEventListener('click', () => api.signOut());
+  if (!started) { started = true; start(); } else dispatch();
+  clearInterval(bellTimer);
+  bellTimer = setInterval(refreshBell, 60_000);
+}
+
+api.onAuthChange((event) => {
+  if (event === 'SIGNED_OUT') { history.replaceState(null, '', '#/'); showLogin(); }
+});
+
+(async function boot() {
+  let session = null;
+  try { session = await api.getAuthSession(); } catch { /* нет сети — покажем вход */ }
+  if (session?.user) enter(session.user); else showLogin();
+})();
+
+
+return {  };
+})();
+</script>
+</body>
+</html>
